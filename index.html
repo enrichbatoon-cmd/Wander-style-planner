@@ -1,522 +1,1356 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-50">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WanderStyle Studio - Travel & Outfit Planner</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfbf9; color: #2d312e; }
-    .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(229, 226, 221, 0.8); }
-    .tab-btn.active { background-color: #1c1917; color: #ffffff; }
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WanderStyle - Gender-Neutral Travel & Wardrobe Studio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        canvas: '#F9F8F6',
+                        earth: {
+                            50: '#F5F4F0',
+                            100: '#EAE7DF',
+                            200: '#D5D0C3',
+                            500: '#A39B8B',
+                            700: '#5F594D',
+                            800: '#433E36',
+                            900: '#2C2823'
+                        },
+                        sage: {
+                            500: '#7E8B75',
+                            600: '#687460'
+                        },
+                        terracotta: {
+                            500: '#C27D5F',
+                            600: '#AA684B'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F9F8F6;
+            color: #2C2823;
+        }
+        /* Custom scrollbar for horizontal wardrobe sliders */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .touch-action-manipulation {
+            touch-action: manipulation;
+        }
+    </style>
 </head>
-<body class="min-h-screen pb-24 md:pb-8">
+<body class="h-full font-sans text-earth-900 flex flex-col antialiased selection:bg-earth-800 selection:text-white">
 
-  <!-- Header Navigation -->
-  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center text-amber-50 shadow-md">
-          <i class="fa-solid font-bold text-lg fa-compass"></i>
-        </div>
-        <div>
-          <h1 class="font-bold text-lg tracking-tight text-stone-900">WanderStyle</h1>
-          <p class="text-xs text-stone-500 font-medium">Travel & Digital Wardrobe</p>
-        </div>
-      </div>
-      
-      <!-- Desktop Navigation Tabs -->
-      <nav class="hidden md:flex items-center space-x-1 bg-stone-100 p-1 rounded-xl">
-        <button onclick="switchTab('destinations')" id="tab-destinations-dt" class="tab-btn active px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center space-x-2">
-          <i class="fa-solid fa-cloud-sun"></i><span>Weather & Destinations</span>
-        </button>
-        <button onclick="switchTab('itinerary')" id="tab-itinerary-dt" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg text-stone-600 transition-all duration-200 flex items-center space-x-2">
-          <i class="fa-solid fa-calendar-days"></i><span>Itinerary Planner</span>
-        </button>
-        <button onclick="switchTab('transport')" id="tab-transport-dt" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg text-stone-600 transition-all duration-200 flex items-center space-x-2">
-          <i class="fa-solid fa-car"></i><span>Road & Ride Hub</span>
-        </button>
-        <button onclick="switchTab('outfits')" id="tab-outfits-dt" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg text-stone-600 transition-all duration-200 flex items-center space-x-2">
-          <i class="fa-solid fa-shirt"></i><span>Outfit Studio</span>
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="max-w-6xl mx-auto px-4 py-6">
-
-    <!-- 1. DESTINATION & WEATHER TRACKER -->
-    <section id="sec-destinations" class="space-y-6">
-      <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 bg-stone-900 text-stone-50 p-6 rounded-3xl shadow-xl">
-        <div class="space-y-1">
-          <span class="text-xs uppercase tracking-widest text-amber-300 font-semibold">Active Destination</span>
-          <h2 id="current-dest-name" class="text-3xl font-extrabold tracking-tight">Tokyo, Japan</h2>
-          <p id="current-dest-sub" class="text-sm text-stone-300">Spring Season • Mild Breezes & Pleasant Skies</p>
-        </div>
-        <div class="flex items-center space-x-2 bg-stone-800/80 p-2 rounded-2xl border border-stone-700">
-          <input type="text" id="dest-input" placeholder="Search city (e.g., Paris, Manila)" class="bg-transparent border-none text-stone-100 placeholder-stone-400 px-3 py-2 text-sm focus:outline-none w-48 md:w-64">
-          <button onclick="handleDestSearch()" class="bg-amber-400 text-stone-900 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-amber-300 transition-all shadow">
-            Search
-          </button>
-        </div>
-      </div>
-
-      <!-- Live Weather Card -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="glass-card p-6 rounded-3xl shadow-sm border border-stone-200 flex flex-col justify-between">
-          <div class="flex justify-between items-start">
-            <div>
-              <p class="text-xs font-semibold uppercase tracking-wider text-stone-400">Current Temp</p>
-              <h3 id="weather-temp" class="text-5xl font-extrabold text-stone-900 mt-2">18°C</h3>
-            </div>
-            <div id="weather-icon-main" class="w-14 h-14 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
-              <i class="fa-solid fa-sun"></i>
-            </div>
-          </div>
-          <div class="mt-6 pt-4 border-t border-stone-100 grid grid-cols-2 gap-4 text-xs">
-            <div>
-              <span class="text-stone-400 block">Condition</span>
-              <span id="weather-cond" class="font-semibold text-stone-800">Partly Cloudy</span>
-            </div>
-            <div>
-              <span class="text-stone-400 block">Humidity</span>
-              <span id="weather-hum" class="font-semibold text-stone-800">55%</span>
-            </div>
-            <div>
-              <span class="text-stone-400 block">Wind Speed</span>
-              <span id="weather-wind" class="font-semibold text-stone-800">12 km/h</span>
-            </div>
-            <div>
-              <span class="text-stone-400 block">UV Index</span>
-              <span id="weather-uv" class="font-semibold text-stone-800">Moderate (4)</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5-Day Forecast -->
-        <div class="md:col-span-2 glass-card p-6 rounded-3xl shadow-sm border border-stone-200">
-          <h3 class="text-base font-bold text-stone-900 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-calendar-week text-amber-600"></i> 5-Day Travel Forecast
-          </h3>
-          <div id="forecast-container" class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            <!-- Forecast Cards Dynamically Populated -->
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 2. ITINERARY PLANNER -->
-    <section id="sec-itinerary" class="hidden space-y-6">
-      <div class="flex justify-between items-center bg-stone-100 p-4 rounded-2xl border border-stone-200">
-        <div>
-          <h2 class="text-xl font-bold text-stone-900">Day-by-Day Travel Itinerary</h2>
-          <p class="text-xs text-stone-500">Plan daily schedules, activities, and match outfits</p>
-        </div>
-        <button onclick="openAddActivityModal()" class="bg-stone-900 text-stone-50 text-xs px-4 py-2.5 rounded-xl font-semibold hover:bg-stone-800 transition flex items-center space-x-2">
-          <i class="fa-solid fa-plus"></i><span>Add Activity</span>
-        </button>
-      </div>
-
-      <div id="itinerary-days-list" class="space-y-4">
-        <!-- Daily Plans dynamically rendered -->
-      </div>
-    </section>
-
-    <!-- 3. ROAD & RIDE HUB (TRANSPORTATION & GRAB) -->
-    <section id="sec-transport" class="hidden space-y-6">
-      <div class="glass-card p-6 rounded-3xl border border-stone-200 space-y-4">
-        <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
-          <i class="fa-solid fa-route text-stone-700"></i> Navigation & Ride Estimator
-        </h2>
-        <p class="text-xs text-stone-500">Estimate Grab ride fares, car rental options, and route timing in your destination.</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-          <div class="space-y-3">
-            <label class="block text-xs font-bold text-stone-700 uppercase">Pick-up Location</label>
-            <input type="text" id="pickup-loc" value="Hotel / Current Stay" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm">
-            <label class="block text-xs font-bold text-stone-700 uppercase">Destination Site</label>
-            <input type="text" id="dropoff-loc" value="Shibuya Crossing, Tokyo" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm">
-            <button onclick="calcRideFare()" class="w-full bg-stone-900 text-stone-50 py-2.5 rounded-xl text-xs font-semibold">Calculate Routes & Fares</button>
-          </div>
-
-          <div id="ride-results" class="bg-stone-50 p-4 rounded-2xl border border-stone-200 text-xs space-y-3">
-            <h4 class="font-bold text-stone-800 text-sm">Estimated Options</h4>
-            <div id="ride-options-list" class="space-y-2">
-              <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-stone-200">
-                <div>
-                  <p class="font-bold text-stone-900">GrabCar Standard</p>
-                  <p class="text-stone-400 text-[11px]">Est. 18 mins • Direct Route</p>
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-canvas/90 backdrop-blur-md border-b border-earth-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-earth-900 flex items-center justify-center text-canvas shadow-sm">
+                        <i class="fa-solid fa-compass text-sm"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold tracking-tight text-earth-900">WanderStyle Studio</h1>
+                        <p class="text-[10px] uppercase tracking-widest text-earth-500 font-semibold hidden sm:block">Universal Travel & Capsule Wardrobe</p>
+                    </div>
                 </div>
-                <span class="font-extrabold text-stone-900 text-sm">$14.50</span>
-              </div>
-              <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-stone-200">
-                <div>
-                  <p class="font-bold text-stone-900">Self-Drive Car Rental</p>
-                  <p class="text-stone-400 text-[11px]">Daily Rate • Compact SUV</p>
+
+                <!-- Destination Quick Badge -->
+                <div class="flex items-center gap-2">
+                    <button onclick="switchTab('destination')" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-earth-100 hover:bg-earth-200/70 transition text-xs font-semibold text-earth-800">
+                        <i class="fa-solid fa-location-dot text-terracotta-500"></i>
+                        <span id="currentDestBadge">Tokyo, Japan</span>
+                    </button>
                 </div>
-                <span class="font-extrabold text-stone-900 text-sm">$45.00/day</span>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </section>
+    </header>
 
-    <!-- 4. OUTFIT STUDIO & DIGITAL WARDROBE -->
-    <section id="sec-outfits" class="hidden space-y-6">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-stone-900 text-stone-50 p-6 rounded-3xl">
-        <div>
-          <h2 class="text-2xl font-bold">Outfit Studio & Wardrobe</h2>
-          <p class="text-xs text-stone-400">Capture available clothing items and generate weather-matched outfits.</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <label class="bg-amber-400 text-stone-900 text-xs px-4 py-2.5 rounded-xl font-bold hover:bg-amber-300 transition cursor-pointer flex items-center space-x-2">
-            <i class="fa-solid fa-camera"></i><span>Snap Available Clothes</span>
-            <input type="file" accept="image/*" capture="environment" onchange="handleImageUpload(event)" class="hidden">
-          </label>
-          <button onclick="autoGenerateOutfit()" class="bg-stone-800 border border-stone-700 text-stone-100 text-xs px-4 py-2.5 rounded-xl font-semibold hover:bg-stone-700 transition flex items-center space-x-2">
-            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i><span>Generate Weather Outfit</span>
-          </button>
-        </div>
-      </div>
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-12">
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Digital Wardrobe Inventory -->
-        <div class="glass-card p-5 rounded-3xl border border-stone-200 space-y-4">
-          <div class="flex justify-between items-center">
-            <h3 class="font-bold text-stone-900 text-base">Your Wardrobe Items</h3>
-            <span id="item-count" class="text-xs bg-stone-100 px-2.5 py-1 rounded-full font-semibold text-stone-600">0 items</span>
-          </div>
-          
-          <div id="wardrobe-grid" class="grid grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1 hide-scrollbar">
-            <!-- Wardrobe items rendered dynamically -->
-          </div>
-        </div>
-
-        <!-- Generated Outfit Display -->
-        <div class="lg:col-span-2 glass-card p-6 rounded-3xl border border-stone-200 flex flex-col justify-between space-y-4">
-          <div class="flex justify-between items-center border-b border-stone-100 pb-3">
-            <div>
-              <h3 class="font-bold text-stone-900 text-base">Weather Outfit Match</h3>
-              <p id="outfit-weather-rating" class="text-xs text-amber-700 font-medium">Equip items or click Generate Weather Outfit</p>
+        <!-- TAB 1: DESTINATION & WEATHER -->
+        <section id="tab-destination" class="tab-content space-y-6">
+            <!-- Search Banner -->
+            <div class="relative rounded-3xl bg-earth-900 p-6 sm:p-10 text-canvas shadow-xl overflow-hidden">
+                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-15"></div>
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-block px-3 py-1 rounded-full bg-earth-800/80 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-earth-200 mb-3 border border-earth-700/50">Trip Destination</span>
+                    <h2 class="text-2xl sm:text-4xl font-light tracking-tight mb-2 text-white">Where are you heading next?</h2>
+                    <p class="text-earth-200 text-xs sm:text-sm mb-6 leading-relaxed">Search any city to view dynamic weather stats, rainfall risk, and tailored clothing recommendations for all styles.</p>
+                    
+                    <form id="destForm" onsubmit="handleDestSearch(event)" class="flex flex-col sm:flex-row gap-2">
+                        <div class="relative flex-1">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-earth-500"></i>
+                            <input type="text" id="destInput" placeholder="e.g. Tokyo, Copenhagen, Kyoto, Milan..." required class="w-full pl-11 pr-4 py-3 rounded-2xl text-earth-900 bg-canvas shadow-inner focus:outline-none focus:ring-2 focus:ring-terracotta-500 text-xs font-medium">
+                        </div>
+                        <button type="submit" class="px-6 py-3 bg-terracotta-500 hover:bg-terracotta-600 active:scale-95 transition text-white font-semibold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+                            <span>Update Destination</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
-            <button onclick="saveCurrentOutfit()" class="bg-stone-900 text-stone-50 px-3.5 py-2 rounded-xl text-xs font-semibold">Save Look</button>
-          </div>
 
-          <div id="outfit-canvas" class="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 min-h-[160px]">
-            <!-- Equipped items grid -->
-          </div>
+            <!-- Weather Details Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Main Weather Card -->
+                <div class="lg:col-span-1 bg-white rounded-3xl p-6 border border-earth-100 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 id="weatherCity" class="text-2xl font-bold text-earth-900">Tokyo</h3>
+                                <p id="weatherCountry" class="text-xs text-earth-500 font-semibold tracking-wide">Japan</p>
+                            </div>
+                            <span id="weatherIcon" class="text-4xl text-terracotta-500"><i class="fa-solid fa-sun"></i></span>
+                        </div>
+                        
+                        <div class="my-6 flex items-baseline gap-3">
+                            <span id="weatherTemp" class="text-5xl font-light text-earth-900">21°</span>
+                            <span id="weatherCondition" class="text-sm font-semibold text-earth-700">Clear & Mild</span>
+                        </div>
+                    </div>
 
-          <div class="bg-amber-50/60 border border-amber-200/60 p-4 rounded-2xl flex items-start space-x-3">
-            <i class="fa-solid fa-lightbulb text-amber-600 mt-0.5"></i>
-            <div>
-              <h4 class="text-xs font-bold text-amber-900 uppercase">Styling Tip</h4>
-              <p id="styling-tip-text" class="text-xs text-amber-800 mt-0.5">Snap your clothes using the camera button above, then click 'Generate Weather Outfit' for a smart match!</p>
+                    <div class="grid grid-cols-4 gap-2 pt-4 border-t border-earth-100 text-center">
+                        <div class="bg-earth-50 p-2 rounded-2xl">
+                            <i class="fa-solid fa-droplet text-earth-700 text-xs mb-1"></i>
+                            <p class="text-[9px] text-earth-500 uppercase font-semibold">Humidity</p>
+                            <p id="weatherHumidity" class="text-xs font-bold text-earth-900">42%</p>
+                        </div>
+                        <div class="bg-earth-50 p-2 rounded-2xl">
+                            <i class="fa-solid fa-cloud-rain text-earth-700 text-xs mb-1"></i>
+                            <p class="text-[9px] text-earth-500 uppercase font-semibold">Rain</p>
+                            <p id="weatherRain" class="text-xs font-bold text-earth-900">5%</p>
+                        </div>
+                        <div class="bg-earth-50 p-2 rounded-2xl">
+                            <i class="fa-solid fa-wind text-earth-700 text-xs mb-1"></i>
+                            <p class="text-[9px] text-earth-500 uppercase font-semibold">Wind</p>
+                            <p id="weatherWind" class="text-xs font-bold text-earth-900">10 km/h</p>
+                        </div>
+                        <div class="bg-earth-50 p-2 rounded-2xl">
+                            <i class="fa-solid fa-sun text-terracotta-500 text-xs mb-1"></i>
+                            <p class="text-[9px] text-earth-500 uppercase font-semibold">UV Index</p>
+                            <p id="weatherUV" class="text-xs font-bold text-earth-900">Moderate (5)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5-Day Forecast -->
+                <div class="lg:col-span-2 bg-white rounded-3xl p-6 border border-earth-100 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="font-bold text-earth-900 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-week text-sage-500"></i>
+                            5-Day Trip Forecast
+                        </h4>
+                        <span class="text-[10px] text-earth-500 font-semibold uppercase tracking-wider">Synced Live</span>
+                    </div>
+
+                    <div id="forecastContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <!-- Forecast items -->
+                    </div>
+
+                    <!-- Quick Travel Packing Advice -->
+                    <div class="mt-4 p-4 rounded-2xl bg-earth-50 border border-earth-200/70 flex items-start gap-3">
+                        <i class="fa-solid fa-compass text-terracotta-500 mt-0.5"></i>
+                        <p id="packingAdvice" class="text-xs text-earth-800 leading-relaxed">
+                            Mild temperatures expected. Layer a breathable top with light outerwear or a unstructured blazer for seamless day-to-night transitions.
+                        </p>
+                    </div>
+                </div>
             </div>
-          </div>
+        </section>
+
+        <!-- TAB 2: ITINERARY PLANNER -->
+        <section id="tab-itinerary" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-earth-900">Day-by-Day Plan</h2>
+                    <p class="text-xs text-earth-500">Schedule activities and link tailored unisex outfits</p>
+                </div>
+                <button onclick="openItineraryModal()" class="px-4 py-2.5 bg-earth-900 hover:bg-earth-800 active:scale-95 transition text-canvas font-semibold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Activity</span>
+                </button>
+            </div>
+
+            <div id="itineraryDaysNav" class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                <!-- Populated via JS -->
+            </div>
+
+            <div id="itineraryList" class="space-y-4">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- TAB 3: ROAD & SITE NAVIGATION -->
+        <section id="tab-navigation" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-earth-900">Road & Site Navigation</h2>
+                    <p class="text-xs text-earth-500">Calculate routes, road conditions, traffic flow, and site turn-by-turn details</p>
+                </div>
+                <button onclick="calculateCurrentRoute()" class="px-4 py-2.5 bg-earth-900 hover:bg-earth-800 active:scale-95 transition text-canvas font-semibold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider">
+                    <i class="fa-solid fa-route"></i>
+                    <span>Recalculate Route</span>
+                </button>
+            </div>
+
+            <!-- Route Inputs Bar -->
+            <div class="bg-white rounded-3xl p-5 border border-earth-100 shadow-sm grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                <div class="md:col-span-5 relative">
+                    <label class="block text-[10px] uppercase font-bold text-earth-500 mb-1 tracking-wider">Starting Location / Pick-Up Point</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-circle-dot absolute left-3.5 top-1/2 -translate-y-1/2 text-sage-500 text-xs"></i>
+                        <input type="text" id="routeStartInput" value="Haneda Airport (HND)" class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-earth-200 text-xs font-semibold text-earth-900 focus:ring-2 focus:ring-earth-800 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="hidden md:flex md:col-span-1 justify-center items-center pt-4">
+                    <div class="w-8 h-8 rounded-full bg-earth-50 flex items-center justify-center text-earth-600 border border-earth-200">
+                        <i class="fa-solid fa-arrow-right-long text-xs"></i>
+                    </div>
+                </div>
+
+                <div class="md:col-span-4 relative">
+                    <label class="block text-[10px] uppercase font-bold text-earth-500 mb-1 tracking-wider">Site Destination</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-location-dot absolute left-3.5 top-1/2 -translate-y-1/2 text-terracotta-500 text-xs"></i>
+                        <input type="text" id="routeEndInput" value="Shibuya Crossing & Meiji Shrine" class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-earth-200 text-xs font-semibold text-earth-900 focus:ring-2 focus:ring-earth-800 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 pt-2 md:pt-4">
+                    <button onclick="calculateCurrentRoute()" class="w-full py-2.5 bg-terracotta-500 hover:bg-terracotta-600 text-white rounded-xl font-semibold text-xs transition shadow-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-magnifying-glass-location"></i>
+                        <span>Find Route</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Road Info & Interactive Map Display -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Visual Simulated Map Box -->
+                <div class="lg:col-span-7 bg-earth-900 text-canvas rounded-3xl p-6 shadow-xl relative overflow-hidden min-h-[340px] flex flex-col justify-between">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-25"></div>
+                    
+                    <div class="relative z-10 flex justify-between items-start">
+                        <span class="px-3 py-1 rounded-full bg-earth-800/90 backdrop-blur-md text-[10px] uppercase font-bold tracking-widest text-terracotta-500 border border-earth-700">Live GPS Simulation</span>
+                        <span id="routeTrafficBadge" class="px-3 py-1 rounded-full bg-sage-500/90 backdrop-blur-md text-[10px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle text-[6px]"></i> Moderate Road Traffic
+                        </span>
+                    </div>
+
+                    <div class="relative z-10 my-8">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fa-solid fa-road text-terracotta-500 text-xl"></i>
+                            <h3 id="routeTitleDisplay" class="text-xl sm:text-2xl font-bold text-white">Haneda Airport → Shibuya District</h3>
+                        </div>
+                        <p id="routeDistanceDisplay" class="text-xs text-earth-200 font-medium">Distance: ~18.4 km via Metropolitan Expressway No. 1</p>
+                    </div>
+
+                    <div class="relative z-10 flex flex-wrap gap-2 pt-4 border-t border-earth-800">
+                        <button onclick="openExternalMaps()" class="px-3.5 py-2 bg-white text-earth-900 rounded-xl text-xs font-bold hover:bg-earth-100 transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-location-arrow text-terracotta-500"></i> Open in Google Maps
+                        </button>
+                        <button onclick="copyRouteDetails()" class="px-3.5 py-2 bg-earth-800/90 text-earth-200 rounded-xl text-xs font-bold hover:text-white border border-earth-700 transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-copy"></i> Copy Directions
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Turn-by-Turn & Metrics -->
+                <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-earth-100 shadow-sm flex flex-col justify-between space-y-4">
+                    <div>
+                        <h3 class="font-bold text-earth-900 text-xs tracking-wider uppercase mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-diamond-turn-right text-terracotta-500"></i>
+                            Road Conditions & Timeline
+                        </h3>
+
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-earth-50 p-3 rounded-2xl">
+                                <p class="text-[9px] text-earth-500 uppercase font-semibold">Est. Travel Time</p>
+                                <p id="routeTimeEst" class="text-base font-bold text-earth-900">28 mins</p>
+                            </div>
+                            <div class="bg-earth-50 p-3 rounded-2xl">
+                                <p class="text-[9px] text-earth-500 uppercase font-semibold">Toll / Highway</p>
+                                <p id="routeTollEst" class="text-base font-bold text-earth-900">¥1,320 (~$8.80)</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3" id="turnByTurnList">
+                            <!-- Injected JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: RENT CAR & GRAB PICK-UP -->
+        <section id="tab-transit" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-earth-900">Rent a Car & Grab Pick-Up</h2>
+                    <p class="text-xs text-earth-500">Book ride-hailing drivers, local taxis, or rent self-drive & chauffeur vehicles</p>
+                </div>
+                <span class="inline-flex items-center gap-1 px-3 py-1 bg-sage-500/10 text-sage-600 rounded-full text-xs font-bold">
+                    <i class="fa-solid fa-shield-halved"></i> Verified Pick-Up Services
+                </span>
+            </div>
+
+            <!-- Live Ride Status Banner (Simulated) -->
+            <div id="rideStatusCard" class="bg-earth-900 text-canvas rounded-3xl p-5 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-terracotta-500 text-white flex items-center justify-center text-xl shadow-md">
+                        <i class="fa-solid fa-car-side"></i>
+                    </div>
+                    <div>
+                        <span class="text-[9px] uppercase tracking-widest font-bold text-earth-400">Current Booking Status</span>
+                        <h4 id="rideStatusText" class="text-sm font-bold text-white">GrabCar Premium • En Route</h4>
+                        <p id="driverDetails" class="text-xs text-earth-300">Driver: Kenji M. (Silver Toyota Crown • 88-XA-02)</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <span id="rideETA" class="px-3.5 py-2 bg-earth-800 rounded-xl text-xs font-bold text-white border border-earth-700">ETA: 4 Mins</span>
+                    <button onclick="cancelRideSim()" class="px-3.5 py-2 bg-red-500/20 text-red-300 hover:bg-red-500/30 rounded-xl text-xs font-bold transition">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Booking Options Grid: Grab Ride-Hailing vs Car Rental -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- RIDE HAILING (Grab, Taxi, Trike) -->
+                <div class="bg-white rounded-3xl p-6 border border-earth-100 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-earth-100 pb-3">
+                        <h3 class="font-bold text-earth-900 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-taxi text-terracotta-500"></i>
+                            Instant Grab & Ride-Hailing
+                        </h3>
+                        <span class="text-[10px] uppercase tracking-wider font-bold text-earth-500">On-Demand Pick-up</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-[10px] font-bold text-earth-500 uppercase mb-1">Pick-up Point</label>
+                            <select id="grabPickupSelect" class="w-full p-2.5 bg-earth-50 rounded-xl border border-earth-200 text-xs font-semibold text-earth-900">
+                                <option value="Airport Arrival Terminal">Airport Arrival Terminal (Gate 3)</option>
+                                <option value="Hotel Lobby">Current Hotel / Airbnb Lobby</option>
+                                <option value="City Central Station">Central Station Exit 4</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-earth-500 uppercase mb-1">Drop-off Point</label>
+                            <input type="text" id="grabDropoffInput" value="Shibuya Crossing, Tokyo" class="w-full p-2.5 bg-earth-50 rounded-xl border border-earth-200 text-xs font-semibold text-earth-900">
+                        </div>
+                    </div>
+
+                    <!-- Ride Type Options -->
+                    <div class="space-y-2 pt-2">
+                        <label class="block text-[10px] font-bold text-earth-500 uppercase">Select Ride Tier</label>
+                        
+                        <div onclick="selectRideTier(this, 'GrabCar Standard', 1680)" class="ride-tier-card p-3 rounded-2xl border-2 border-earth-900 bg-earth-50 flex items-center justify-between cursor-pointer transition">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-car text-earth-800 text-lg"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-earth-900">GrabCar 4-Seater</p>
+                                    <p class="text-[10px] text-earth-500">Fast everyday rides</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold text-earth-900">¥1,680</span>
+                        </div>
+
+                        <div onclick="selectRideTier(this, 'GrabCar Premium', 2450)" class="ride-tier-card p-3 rounded-2xl border border-earth-200 bg-white flex items-center justify-between cursor-pointer transition hover:border-earth-400">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-car-side text-terracotta-500 text-lg"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-earth-900">Grab Premium Sedan</p>
+                                    <p class="text-[10px] text-earth-500">Executive comfort & extra legroom</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold text-earth-900">¥2,450</span>
+                        </div>
+
+                        <div onclick="selectRideTier(this, 'Local Bike / Scooter Express', 820)" class="ride-tier-card p-3 rounded-2xl border border-earth-200 bg-white flex items-center justify-between cursor-pointer transition hover:border-earth-400">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-motorcycle text-sage-600 text-lg"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-earth-900">Express Bike / JoyRide</p>
+                                    <p class="text-[10px] text-earth-500">Best for quick solo traffic bypass</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold text-earth-900">¥820</span>
+                        </div>
+                    </div>
+
+                    <button onclick="bookGrabRide()" class="w-full py-3 bg-earth-900 hover:bg-earth-800 text-white rounded-2xl font-semibold text-xs transition shadow-md flex items-center justify-center gap-2 uppercase tracking-wider">
+                        <i class="fa-solid fa-mobile-screen-button"></i> Book Grab Ride Now
+                    </button>
+                </div>
+
+                <!-- CAR RENTAL (Self-Drive / Chauffeur) -->
+                <div class="bg-white rounded-3xl p-6 border border-earth-100 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-earth-100 pb-3">
+                        <h3 class="font-bold text-earth-900 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-key text-sage-500"></i>
+                            Car Rental & Chauffeur Services
+                        </h3>
+                        <span class="text-[10px] uppercase tracking-wider font-bold text-earth-500">Daily Rates</span>
+                    </div>
+
+                    <!-- Mode switch -->
+                    <div class="grid grid-cols-2 gap-2 bg-earth-100 p-1 rounded-xl">
+                        <button id="btnSelfDrive" onclick="toggleRentalMode('self')" class="py-2 text-xs font-bold rounded-lg bg-white shadow-xs text-earth-900">Self-Drive</button>
+                        <button id="btnWithDriver" onclick="toggleRentalMode('driver')" class="py-2 text-xs font-bold rounded-lg text-earth-600 hover:text-earth-900">With Chauffeur</button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold text-earth-500 uppercase mb-1">Duration (Days)</label>
+                            <input type="number" id="rentalDays" value="3" min="1" max="30" onchange="updateRentalPrice()" class="w-full p-2.5 bg-earth-50 rounded-xl border border-earth-200 text-xs font-semibold text-earth-900">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-earth-500 uppercase mb-1">Pick-Up Spot</label>
+                            <select id="rentalPickupLocation" class="w-full p-2.5 bg-earth-50 rounded-xl border border-earth-200 text-xs font-semibold text-earth-900">
+                                <option value="Airport Counter">Airport Rental Desk</option>
+                                <option value="Hotel Delivery">Hotel Direct Delivery</option>
+                                <option value="Downtown Hub">Downtown Fleet Hub</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Vehicle Type Picker -->
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-bold text-earth-500 uppercase">Select Vehicle Type</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="selectVehicle('Sedan', 55)" class="vehicle-btn border-2 border-earth-900 bg-earth-50 p-2.5 rounded-2xl flex flex-col items-center text-center">
+                                <i class="fa-solid fa-car text-earth-800 text-lg mb-1"></i>
+                                <span class="text-[11px] font-bold text-earth-900">Compact</span>
+                                <span class="text-[9px] text-earth-500">$55/day</span>
+                            </button>
+                            <button onclick="selectVehicle('SUV', 85)" class="vehicle-btn border border-earth-200 bg-white p-2.5 rounded-2xl flex flex-col items-center text-center hover:border-earth-400">
+                                <i class="fa-solid fa-car-rear text-earth-800 text-lg mb-1"></i>
+                                <span class="text-[11px] font-bold text-earth-900">SUV 4WD</span>
+                                <span class="text-[9px] text-earth-500">$85/day</span>
+                            </button>
+                            <button onclick="selectVehicle('Van', 120)" class="vehicle-btn border border-earth-200 bg-white p-2.5 rounded-2xl flex flex-col items-center text-center hover:border-earth-400">
+                                <i class="fa-solid fa-van-shuttle text-earth-800 text-lg mb-1"></i>
+                                <span class="text-[11px] font-bold text-earth-900">Family Van</span>
+                                <span class="text-[9px] text-earth-500">$120/day</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Total Estimated Price Card -->
+                    <div class="bg-earth-50 border border-earth-200/80 rounded-2xl p-3.5 flex justify-between items-center">
+                        <div>
+                            <p class="text-[10px] uppercase font-bold text-earth-500">Estimated Total Cost</p>
+                            <p id="rentalTotalDisplay" class="text-lg font-bold text-earth-900">$165.00 USD</p>
+                        </div>
+                        <span class="text-[10px] text-sage-600 bg-sage-500/10 px-2.5 py-1 rounded-full font-bold">Includes Insurance & GPS</span>
+                    </div>
+
+                    <button onclick="reserveCarRental()" class="w-full py-3 bg-terracotta-500 hover:bg-terracotta-600 text-white rounded-2xl font-semibold text-xs transition shadow-md flex items-center justify-center gap-2 uppercase tracking-wider">
+                        <i class="fa-solid fa-car-side"></i> Reserve Rental Car
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: DIGITAL WARDROBE -->
+        <section id="tab-wardrobe" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-earth-900">Capsule Wardrobe</h2>
+                    <p class="text-xs text-earth-500">Snap photos of your clothes or pick from versatile unisex defaults</p>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button onclick="loadUnisexPresets()" class="px-3.5 py-2.5 bg-earth-100 hover:bg-earth-200 text-earth-800 font-semibold rounded-2xl text-xs transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Reset Presets
+                    </button>
+                    <label class="cursor-pointer px-4 py-2.5 bg-earth-900 hover:bg-earth-800 active:scale-95 transition text-canvas font-semibold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider">
+                        <i class="fa-solid fa-camera"></i>
+                        <span>Upload Photo</span>
+                        <input type="file" id="wardrobeFileInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageUpload(event)">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Wardrobe Category Selector Filter -->
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                <button onclick="filterWardrobe('all')" class="wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-earth-900 text-white shadow-sm" data-cat="all">All Items</button>
+                <button onclick="filterWardrobe('top')" class="wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-earth-700 border border-earth-200 hover:bg-earth-50" data-cat="top">Tops</button>
+                <button onclick="filterWardrobe('bottom')" class="wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-earth-700 border border-earth-200 hover:bg-earth-50" data-cat="bottom">Bottoms</button>
+                <button onclick="filterWardrobe('outerwear')" class="wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-earth-700 border border-earth-200 hover:bg-earth-50" data-cat="outerwear">Outerwear</button>
+                <button onclick="filterWardrobe('shoes')" class="wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-earth-700 border border-earth-200 hover:bg-earth-50" data-cat="shoes">Shoes</button>
+                <button onclick="filterWardrobe('accessory')" class="wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-earth-700 border border-earth-200 hover:bg-earth-50" data-cat="accessory">Accessories</button>
+            </div>
+
+            <!-- Grid Display -->
+            <div id="wardrobeGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Wardrobe cards injected here -->
+            </div>
+        </section>
+
+        <!-- TAB 6: SMART OUTFIT GENERATOR -->
+        <section id="tab-outfit" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-earth-900">Outfit Studio & Smart Matching</h2>
+                    <p class="text-xs text-earth-500">Snap photos of your available clothes & generate tailored outfits for <span id="outfitDestWeatherLabel" class="font-bold text-terracotta-600">Tokyo's Weather</span></p>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                    <!-- Quick Snap Photo Direct Camera Input -->
+                    <label class="cursor-pointer px-4 py-2.5 bg-earth-900 hover:bg-earth-800 active:scale-95 transition text-canvas font-semibold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider">
+                        <i class="fa-solid fa-camera"></i>
+                        <span>Snap Available Clothing</span>
+                        <input type="file" id="outfitDirectCaptureInput" accept="image/*" capture="environment" class="hidden" onchange="handleDirectOutfitCapture(event)">
+                    </label>
+
+                    <button onclick="autoGenerateOutfit()" class="px-5 py-2.5 bg-terracotta-500 hover:bg-terracotta-600 active:scale-95 transition text-white font-semibold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Generate Weather Outfit</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Weather Adaptation Match Bar -->
+            <div id="weatherOutfitMatchBanner" class="bg-earth-50 border border-earth-200/80 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-earth-900 text-canvas flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-temperature-half"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-earth-900">Target Condition: <span id="outfitTargetWeatherText">Clear & Mild (21°)</span></h4>
+                        <p id="outfitWeatherTip" class="text-[11px] text-earth-600">Auto-matching lightweight tops with comfortable bottoms and breathable shoes.</p>
+                    </div>
+                </div>
+                <span id="outfitMatchScore" class="px-3 py-1 rounded-full bg-sage-500/20 text-sage-600 text-xs font-bold flex items-center gap-1.5 self-end sm:self-center">
+                    <i class="fa-solid fa-shield-check"></i> 98% Weather Compatible
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Visual Canvas Area -->
+                <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-earth-100 shadow-sm flex flex-col items-center justify-between">
+                    <div class="w-full flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-earth-900 text-xs tracking-wider uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-shirt text-sage-500"></i>
+                            Outfit Canvas
+                        </h3>
+                        <button onclick="clearCanvas()" class="text-xs font-semibold text-terracotta-600 hover:underline">Reset Canvas</button>
+                    </div>
+
+                    <!-- Canvas Layer slots -->
+                    <div class="w-full max-w-md bg-earth-50/70 rounded-2xl p-4 border border-dashed border-earth-200 space-y-3 min-h-[360px] flex flex-col justify-center">
+                        <div id="slot-outerwear" class="outfit-slot min-h-[70px] bg-white rounded-xl border border-earth-100 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                            <span class="text-xs text-earth-500 uppercase font-bold tracking-widest text-[10px]">Outerwear Layer</span>
+                        </div>
+                        <div id="slot-top" class="outfit-slot min-h-[85px] bg-white rounded-xl border border-earth-100 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                            <span class="text-xs text-earth-500 uppercase font-bold tracking-widest text-[10px]">Top Layer</span>
+                        </div>
+                        <div id="slot-bottom" class="outfit-slot min-h-[85px] bg-white rounded-xl border border-earth-100 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                            <span class="text-xs text-earth-500 uppercase font-bold tracking-widest text-[10px]">Bottom Layer</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div id="slot-shoes" class="outfit-slot min-h-[65px] bg-white rounded-xl border border-earth-100 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                                <span class="text-xs text-earth-500 uppercase font-bold tracking-widest text-[10px]">Shoes</span>
+                            </div>
+                            <div id="slot-accessory" class="outfit-slot min-h-[65px] bg-white rounded-xl border border-earth-100 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                                <span class="text-xs text-earth-500 uppercase font-bold tracking-widest text-[10px]">Accessory</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save Outfit Action -->
+                    <div class="w-full mt-6 flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="outfitNameInput" placeholder="Outfit Title (e.g., Tokyo Minimalist Look)" class="flex-1 px-4 py-2.5 rounded-xl border border-earth-200 text-xs font-medium focus:ring-2 focus:ring-earth-800 focus:outline-none bg-canvas">
+                        <button onclick="saveCurrentOutfit()" class="px-5 py-2.5 bg-earth-900 hover:bg-earth-800 text-white rounded-xl font-semibold text-xs transition shadow-md tracking-wider">
+                            Save Outfit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Wardrobe Picker Sidebar -->
+                <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-earth-100 shadow-sm flex flex-col">
+                    <h3 class="font-bold text-earth-900 text-xs tracking-wider uppercase mb-3">Tap item to equip</h3>
+                    <div class="flex gap-1 bg-earth-100 p-1 rounded-xl mb-4 overflow-x-auto no-scrollbar">
+                        <button onclick="switchPickerCategory('top')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-bold rounded-lg bg-white shadow-xs text-earth-900" data-cat="top">Tops</button>
+                        <button onclick="switchPickerCategory('bottom')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-bold rounded-lg text-earth-700 hover:text-earth-900" data-cat="bottom">Bottoms</button>
+                        <button onclick="switchPickerCategory('outerwear')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-bold rounded-lg text-earth-700 hover:text-earth-900" data-cat="outerwear">Outer</button>
+                        <button onclick="switchPickerCategory('shoes')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-bold rounded-lg text-earth-700 hover:text-earth-900" data-cat="shoes">Shoes</button>
+                        <button onclick="switchPickerCategory('accessory')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-bold rounded-lg text-earth-700 hover:text-earth-900" data-cat="accessory">Accs</button>
+                    </div>
+
+                    <div id="pickerItemsGrid" class="grid grid-cols-3 gap-2 overflow-y-auto max-h-[350px] pr-1">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved Outfits Collection -->
+            <div class="pt-6 border-t border-earth-200/80">
+                <h3 class="text-lg font-bold text-earth-900 mb-4">Saved Lookbook</h3>
+                <div id="savedOutfitsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation Bar for Mobile -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-canvas/95 backdrop-blur-md border-t border-earth-200 md:hidden">
+        <div class="grid grid-cols-5 h-16">
+            <button onclick="switchTab('destination')" class="nav-tab-btn flex flex-col items-center justify-center text-earth-900" data-tab="destination">
+                <i class="fa-solid fa-compass text-base"></i>
+                <span class="text-[9px] font-bold tracking-wider mt-0.5">Explore</span>
+            </button>
+            <button onclick="switchTab('itinerary')" class="nav-tab-btn flex flex-col items-center justify-center text-earth-500 hover:text-earth-900" data-tab="itinerary">
+                <i class="fa-solid fa-calendar-day text-base"></i>
+                <span class="text-[9px] font-bold tracking-wider mt-0.5">Plan</span>
+            </button>
+            <button onclick="switchTab('navigation')" class="nav-tab-btn flex flex-col items-center justify-center text-earth-500 hover:text-earth-900" data-tab="navigation">
+                <i class="fa-solid fa-route text-base"></i>
+                <span class="text-[9px] font-bold tracking-wider mt-0.5">Road</span>
+            </button>
+            <button onclick="switchTab('transit')" class="nav-tab-btn flex flex-col items-center justify-center text-earth-500 hover:text-earth-900" data-tab="transit">
+                <i class="fa-solid fa-taxi text-base"></i>
+                <span class="text-[9px] font-bold tracking-wider mt-0.5">Rent/Grab</span>
+            </button>
+            <button onclick="switchTab('outfit')" class="nav-tab-btn flex flex-col items-center justify-center text-earth-500 hover:text-earth-900" data-tab="outfit">
+                <i class="fa-solid fa-wand-magic-sparkles text-base"></i>
+                <span class="text-[9px] font-bold tracking-wider mt-0.5">Outfits</span>
+            </button>
         </div>
-      </div>
-    </section>
+    </nav>
 
-  </main>
-
-  <!-- Mobile Bottom Navigation Bar -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-stone-200 z-40 px-6 py-2">
-    <div class="flex justify-between items-center">
-      <button onclick="switchTab('destinations')" id="tab-destinations-mb" class="flex flex-col items-center space-y-1 text-stone-900">
-        <i class="fa-solid fa-cloud-sun text-lg"></i><span class="text-[10px] font-medium">Weather</span>
-      </button>
-      <button onclick="switchTab('itinerary')" id="tab-itinerary-mb" class="flex flex-col items-center space-y-1 text-stone-400">
-        <i class="fa-solid fa-calendar-days text-lg"></i><span class="text-[10px] font-medium">Plan</span>
-      </button>
-      <button onclick="switchTab('transport')" id="tab-transport-mb" class="flex flex-col items-center space-y-1 text-stone-400">
-        <i class="fa-solid fa-car text-lg"></i><span class="text-[10px] font-medium">Rides</span>
-      </button>
-      <button onclick="switchTab('outfits')" id="tab-outfits-mb" class="flex flex-col items-center space-y-1 text-stone-400">
-        <i class="fa-solid fa-shirt text-lg"></i><span class="text-[10px] font-medium">Outfits</span>
-      </button>
+    <!-- Desktop Floating Navigation Bar -->
+    <div class="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-earth-900/95 backdrop-blur-md text-white px-3 py-2 rounded-full shadow-2xl border border-earth-700/60 space-x-1">
+        <button onclick="switchTab('destination')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold bg-terracotta-500 text-white transition" data-tab="destination">
+            <i class="fa-solid fa-compass mr-1.5"></i> Destination
+        </button>
+        <button onclick="switchTab('itinerary')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-earth-200 hover:text-white transition" data-tab="itinerary">
+            <i class="fa-solid fa-calendar-day mr-1.5"></i> Itinerary
+        </button>
+        <button onclick="switchTab('navigation')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-earth-200 hover:text-white transition" data-tab="navigation">
+            <i class="fa-solid fa-route mr-1.5"></i> Road Tracker
+        </button>
+        <button onclick="switchTab('transit')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-earth-200 hover:text-white transition" data-tab="transit">
+            <i class="fa-solid fa-taxi mr-1.5"></i> Rent & Grab
+        </button>
+        <button onclick="switchTab('wardrobe')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-earth-200 hover:text-white transition" data-tab="wardrobe">
+            <i class="fa-solid fa-shirt mr-1.5"></i> Closet
+        </button>
+        <button onclick="switchTab('outfit')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-earth-200 hover:text-white transition" data-tab="outfit">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Outfit Studio
+        </button>
     </div>
-  </nav>
 
-  <!-- Application Script -->
-  <script>
-    // State management
-    let state = {
-      currentTab: 'destinations',
-      destination: 'Tokyo, Japan',
-      temp: 18,
-      condition: 'Partly Cloudy',
-      wardrobe: JSON.parse(localStorage.getItem('ws_wardrobe') || '[]'),
-      equippedOutfit: { top: null, bottom: null, outerwear: null, shoes: null },
-      itinerary: JSON.parse(localStorage.getItem('ws_itinerary') || '[{"id":1,"day":"Day 1","time":"09:00 AM","title":"Arrival & Hotel Check-in","category":"Travel"},{"id":2,"day":"Day 1","time":"02:00 PM","title":"Explore City Center","category":"Sightseeing"}]')
-    };
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-20 right-4 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 bg-earth-900 text-canvas px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 border border-earth-700 text-xs font-semibold">
+        <i class="fa-solid fa-circle-check text-sage-500 text-base"></i>
+        <span id="toastMsg">Action completed successfully</span>
+    </div>
 
-    function switchTab(tabName) {
-      state.currentTab = tabName;
-      ['destinations', 'itinerary', 'transport', 'outfits'].forEach(t => {
-        const sec = document.getElementById(`sec-${t}`);
-        if (sec) sec.classList.toggle('hidden', t !== tabName);
+    <script>
+        // --- GENDER-NEUTRAL UNISEX DEFAULT WARDROBE PRESETS ---
+        const UNISEX_PRESETS = [
+            { id: "w1", title: "Organic Cotton Tee", category: "top", weather: "warm", img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80" },
+            { id: "w2", title: "Linen Button-Down", category: "top", weather: "warm", img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&q=80" },
+            { id: "w3", title: "Tailored Trousers", category: "bottom", weather: "warm", img: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&q=80" },
+            { id: "w4", title: "Straight Denim Jeans", category: "bottom", weather: "cold", img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&q=80" },
+            { id: "w5", title: "Unstructured Blazer", category: "outerwear", weather: "cold", img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=400&q=80" },
+            { id: "w6", title: "Classic Trench Coat", category: "outerwear", weather: "cold", img: "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=400&q=80" },
+            { id: "w7", title: "Minimalist Leather Sneakers", category: "shoes", weather: "warm", img: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=400&q=80" },
+            { id: "w8", title: "Chelsea Leather Boots", category: "shoes", weather: "cold", img: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=400&q=80" },
+            { id: "w9", title: "Unisex Acetate Sunglasses", category: "accessory", weather: "warm", img: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=400&q=80" },
+            { id: "w10", title: "Canvas Crossbody Bag", category: "accessory", weather: "warm", img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=400&q=80" }
+        ];
+
+        const DEFAULT_DEST = "Tokyo, Japan";
         
-        const dtBtn = document.getElementById(`tab-${t}-dt`);
-        if (dtBtn) {
-          dtBtn.classList.toggle('active', t === tabName);
-          dtBtn.classList.toggle('text-stone-600', t !== tabName);
-        }
-        
-        const mbBtn = document.getElementById(`tab-${t}-mb`);
-        if (mbBtn) {
-          mbBtn.classList.toggle('text-stone-900', t === tabName);
-          mbBtn.classList.toggle('text-stone-400', t !== tabName);
-        }
-      });
-    }
-
-    function handleDestSearch() {
-      const input = document.getElementById('dest-input').value.trim();
-      if (!input) return;
-      state.destination = input;
-      
-      // Dynamic weather variation simulation based on city name length
-      const seed = input.length * 5;
-      state.temp = (12 + (seed % 18));
-      const conditions = ['Sunny & Clear', 'Partly Cloudy', 'Breezy & Cool', 'Mild Rain'];
-      state.condition = conditions[seed % conditions.length];
-
-      document.getElementById('current-dest-name').textContent = input;
-      document.getElementById('weather-temp').textContent = `${state.temp}°C`;
-      document.getElementById('weather-cond').textContent = state.condition;
-      document.getElementById('current-dest-sub').textContent = `Travel Forecast • ${state.condition}`;
-      
-      renderForecast();
-      updateOutfitTip();
-    }
-
-    function renderForecast() {
-      const container = document.getElementById('forecast-container');
-      if (!container) return;
-      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-      container.innerHTML = days.map((d, i) => {
-        const dayTemp = state.temp + (i % 2 === 0 ? i : -i);
-        return `
-          <div class="bg-stone-50 border border-stone-200 p-3 rounded-2xl text-center space-y-1">
-            <p class="text-xs font-bold text-stone-500">${d}</p>
-            <i class="fa-solid ${i % 2 === 0 ? 'fa-sun text-amber-500' : 'fa-cloud-sun text-stone-500'} text-lg my-1"></i>
-            <p class="text-sm font-extrabold text-stone-900">${dayTemp}°C</p>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const types = ['top', 'bottom', 'outerwear', 'shoes'];
-        const typeChoice = prompt("What type of garment is this? (Enter: top, bottom, outerwear, or shoes)", "top") || "top";
-        const selectedType = types.includes(typeChoice.toLowerCase()) ? typeChoice.toLowerCase() : 'top';
-
-        const newItem = {
-          id: Date.now(),
-          type: selectedType,
-          image: e.target.result
+        let appData = {
+            destination: DEFAULT_DEST,
+            weather: {
+                city: "Tokyo",
+                country: "Japan",
+                temp: 21,
+                condition: "Clear & Mild",
+                humidity: "42%",
+                rain: "5%",
+                wind: "10 km/h",
+                uv: "Moderate (5)",
+                type: "warm",
+                forecast: [
+                    { day: "Day 1", temp: "21°", cond: "Clear", icon: "fa-sun" },
+                    { day: "Day 2", temp: "23°", cond: "Sunny", icon: "fa-sun" },
+                    { day: "Day 3", temp: "18°", cond: "Breezy", icon: "fa-wind" },
+                    { day: "Day 4", temp: "20°", cond: "Cloudy", icon: "fa-cloud" },
+                    { day: "Day 5", temp: "22°", cond: "Clear", icon: "fa-sun" }
+                ]
+            },
+            wardrobe: [...UNISEX_PRESETS],
+            outfits: [],
+            itinerary: [
+                { id: "i1", day: 1, time: "10:00", title: "Explore Meiji Shrine & Yoyogi Park", location: "Shibuya, Tokyo", type: "sightseeing", outfitId: null },
+                { id: "i2", day: 1, time: "19:00", title: "Dinner at Omotesando Bistro", location: "Minato City", type: "dining", outfitId: null }
+            ],
+            currentCanvas: {
+                top: null,
+                bottom: null,
+                outerwear: null,
+                shoes: null,
+                accessory: null
+            },
+            rental: {
+                mode: 'self',
+                vehicle: 'Sedan',
+                dailyRate: 55,
+                days: 3
+            },
+            currentRide: {
+                tier: 'GrabCar Standard',
+                price: 1680,
+                active: false
+            }
         };
-        state.wardrobe.push(newItem);
-        localStorage.setItem('ws_wardrobe', JSON.stringify(state.wardrobe));
-        renderWardrobe();
-        autoGenerateOutfit();
-      };
-      reader.readAsDataURL(file);
-    }
 
-    function renderWardrobe() {
-      const grid = document.getElementById('wardrobe-grid');
-      const count = document.getElementById('item-count');
-      if (count) count.textContent = `${state.wardrobe.length} items`;
-      if (!grid) return;
+        // --- ROAD NAVIGATION & RIDE-HAILING CALCULATOR LOGIC ---
+        function calculateCurrentRoute() {
+            const start = document.getElementById('routeStartInput').value.trim() || 'Start Location';
+            const end = document.getElementById('routeEndInput').value.trim() || 'Destination';
 
-      if (state.wardrobe.length === 0) {
-        grid.innerHTML = `<p class="col-span-3 text-xs text-stone-400 text-center py-6">No clothing items uploaded yet. Tap "Snap Available Clothes" to start!</p>`;
-        return;
-      }
+            document.getElementById('routeTitleDisplay').innerText = `${start} → ${end}`;
+            
+            const hash = (start + end).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const distance = (10 + (hash % 25) + (hash % 10) * 0.4).toFixed(1);
+            const travelTime = Math.round(distance * 1.8);
+            const toll = Math.round(distance * 75);
 
-      grid.innerHTML = state.wardrobe.map(item => `
-        <div onclick="equipItem(${item.id})" class="relative cursor-pointer group rounded-xl overflow-hidden border border-stone-200 bg-stone-100 aspect-square shadow-sm hover:ring-2 hover:ring-stone-900 transition">
-          <img src="${item.image}" class="w-full h-full object-cover">
-          <span class="absolute bottom-1 left-1 bg-stone-900/80 text-white text-[9px] px-1.5 py-0.5 rounded capitalize">${item.type}</span>
-          <button onclick="event.stopPropagation(); deleteItem(${item.id})" class="absolute top-1 right-1 bg-red-600/80 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">×</button>
-        </div>
-      `).join('');
-    }
+            document.getElementById('routeDistanceDisplay').innerText = `Distance: ~${distance} km via Main Highway / Arterial Expressway`;
+            document.getElementById('routeTimeEst').innerText = `${travelTime} mins`;
+            document.getElementById('routeTollEst').innerText = `¥${toll} (~$${(toll / 150).toFixed(2)})`;
 
-    function deleteItem(id) {
-      state.wardrobe = state.wardrobe.filter(item => item.id !== id);
-      localStorage.setItem('ws_wardrobe', JSON.stringify(state.wardrobe));
-      renderWardrobe();
-      renderOutfitCanvas();
-    }
+            const turnList = [
+                { text: `Head North from ${start} onto the main avenue`, dist: "1.2 km" },
+                { text: `Merge onto Highway Route (Follow city direction signs)`, dist: "10.4 km" },
+                { text: `Take Exit 14 towards Central District / ${end}`, dist: "4.8 km" },
+                { text: `Turn right at the junction into designated site parking`, dist: "2.0 km" }
+            ];
 
-    function equipItem(id) {
-      const item = state.wardrobe.find(i => i.id === id);
-      if (item) {
-        state.equippedOutfit[item.type] = item;
-        renderOutfitCanvas();
-        updateOutfitTip();
-      }
-    }
+            document.getElementById('turnByTurnList').innerHTML = turnList.map((step, idx) => `
+                <div class="flex items-start gap-3 p-2.5 rounded-xl bg-earth-50 border border-earth-100">
+                    <span class="w-5 h-5 rounded-full bg-earth-900 text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                    <div class="flex-1">
+                        <p class="text-xs font-semibold text-earth-900">${step.text}</p>
+                        <span class="text-[10px] font-semibold text-earth-500">${step.dist}</span>
+                    </div>
+                </div>
+            `).join('');
 
-    function autoGenerateOutfit() {
-      if (state.wardrobe.length === 0) {
-        alert("Please snap or upload clothing items first!");
-        return;
-      }
+            showToast("Calculated optimal road route!");
+        }
 
-      const tops = state.wardrobe.filter(i => i.type === 'top');
-      const bottoms = state.wardrobe.filter(i => i.type === 'bottom');
-      const outerwears = state.wardrobe.filter(i => i.type === 'outerwear');
-      const shoes = state.wardrobe.filter(i => i.type === 'shoes');
+        function openExternalMaps() {
+            const start = encodeURIComponent(document.getElementById('routeStartInput').value);
+            const end = encodeURIComponent(document.getElementById('routeEndInput').value);
+            window.open(`https://www.google.com/maps/dir/?api=1&origin=${start}&destination=${end}`, '_blank');
+        }
 
-      if (tops.length) state.equippedOutfit.top = tops[Math.floor(Math.random() * tops.length)];
-      if (bottoms.length) state.equippedOutfit.bottom = bottoms[Math.floor(Math.random() * bottoms.length)];
-      if (shoes.length) state.equippedOutfit.shoes = shoes[Math.floor(Math.random() * shoes.length)];
+        function copyRouteDetails() {
+            const start = document.getElementById('routeStartInput').value;
+            const end = document.getElementById('routeEndInput').value;
+            const text = `WanderStyle Route: From ${start} to ${end}. Est distance: ${document.getElementById('routeDistanceDisplay').innerText}`;
+            
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
 
-      if (state.temp < 20 && outerwears.length) {
-        state.equippedOutfit.outerwear = outerwears[Math.floor(Math.random() * outerwears.length)];
-      } else {
-        state.equippedOutfit.outerwear = null;
-      }
+            showToast("Copied route details to clipboard!");
+        }
 
-      renderOutfitCanvas();
-      updateOutfitTip();
-    }
+        function toggleRentalMode(mode) {
+            appData.rental.mode = mode;
+            const btnSelf = document.getElementById('btnSelfDrive');
+            const btnDriver = document.getElementById('btnWithDriver');
 
-    function renderOutfitCanvas() {
-      const canvas = document.getElementById('outfit-canvas');
-      if (!canvas) return;
+            if (mode === 'self') {
+                btnSelf.className = "py-2 text-xs font-bold rounded-lg bg-white shadow-xs text-earth-900";
+                btnDriver.className = "py-2 text-xs font-bold rounded-lg text-earth-600 hover:text-earth-900";
+            } else {
+                btnDriver.className = "py-2 text-xs font-bold rounded-lg bg-white shadow-xs text-earth-900";
+                btnSelf.className = "py-2 text-xs font-bold rounded-lg text-earth-600 hover:text-earth-900";
+            }
+            updateRentalPrice();
+        }
 
-      const slots = ['top', 'bottom', 'outerwear', 'shoes'];
-      canvas.innerHTML = slots.map(slot => {
-        const item = state.equippedOutfit[slot];
-        return `
-          <div class="border border-stone-200 rounded-2xl p-2 bg-white flex flex-col items-center justify-center h-36 relative">
-            <span class="text-[10px] uppercase font-bold text-stone-400 absolute top-2 left-2">${slot}</span>
-            ${item ? `
-              <img src="${item.image}" class="w-full h-24 object-cover rounded-xl mt-3">
-            ` : `
-              <div class="text-center text-stone-300 mt-3">
-                <i class="fa-solid fa-shirt text-xl mb-1"></i>
-                <p class="text-[10px]">Empty Slot</p>
-              </div>
-            `}
-          </div>
-        `;
-      }).join('');
-    }
+        function selectVehicle(type, baseRate) {
+            appData.rental.vehicle = type;
+            appData.rental.dailyRate = baseRate;
 
-    function updateOutfitTip() {
-      const rating = document.getElementById('outfit-weather-rating');
-      const tip = document.getElementById('styling-tip-text');
+            document.querySelectorAll('.vehicle-btn').forEach(btn => {
+                btn.className = "vehicle-btn border border-earth-200 bg-white p-2.5 rounded-2xl flex flex-col items-center text-center hover:border-earth-400";
+            });
+            event.currentTarget.className = "vehicle-btn border-2 border-earth-900 bg-earth-50 p-2.5 rounded-2xl flex flex-col items-center text-center";
+            updateRentalPrice();
+        }
 
-      if (!rating || !tip) return;
+        function updateRentalPrice() {
+            const days = parseInt(document.getElementById('rentalDays').value) || 1;
+            appData.rental.days = days;
+            const driverFee = appData.rental.mode === 'driver' ? 40 : 0;
+            const total = (appData.rental.dailyRate + driverFee) * days;
+            document.getElementById('rentalTotalDisplay').innerText = `$${total.toFixed(2)} USD`;
+        }
 
-      if (state.temp < 16) {
-        rating.textContent = `100% Match for Cool Weather (${state.temp}°C) in ${state.destination}`;
-        tip.textContent = "Cool temperatures expected! Layer up with your equipped outerwear and long pants for maximum warmth.";
-      } else if (state.temp > 25) {
-        rating.textContent = `98% Match for Warm Weather (${state.temp}°C) in ${state.destination}`;
-        tip.textContent = "Warm & sunny condition detected! Light breathable tops and comfortable shoes are recommended.";
-      } else {
-        rating.textContent = `95% Match for Mild Weather (${state.temp}°C) in ${state.destination}`;
-        tip.textContent = "Mild temperature detected. Combine a versatile top with stylish layers for easy adaptability.";
-      }
-    }
+        function selectRideTier(card, tierName, price) {
+            appData.currentRide.tier = tierName;
+            appData.currentRide.price = price;
 
-    function calcRideFare() {
-      const pickup = document.getElementById('pickup-loc').value || 'Hotel Stay';
-      const dropoff = document.getElementById('dropoff-loc').value || 'Destination Site';
+            document.querySelectorAll('.ride-tier-card').forEach(c => {
+                c.className = "ride-tier-card p-3 rounded-2xl border border-earth-200 bg-white flex items-center justify-between cursor-pointer transition hover:border-earth-400";
+            });
+            card.className = "ride-tier-card p-3 rounded-2xl border-2 border-earth-900 bg-earth-50 flex items-center justify-between cursor-pointer transition";
+        }
 
-      const distanceEst = (Math.random() * 8 + 3).toFixed(1);
-      const grabFare = (distanceEst * 1.8 + 5).toFixed(2);
-      const rentalRate = 45.00;
+        function bookGrabRide() {
+            const pickup = document.getElementById('grabPickupSelect').value;
+            const dropoff = document.getElementById('grabDropoffInput').value;
 
-      const list = document.getElementById('ride-options-list');
-      if (list) {
-        list.innerHTML = `
-          <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-stone-200">
-            <div>
-              <p class="font-bold text-stone-900">GrabCar Standard (${pickup} → ${dropoff})</p>
-              <p class="text-stone-400 text-[11px]">Est. ${distanceEst} km • ~${Math.round(distanceEst * 3)} mins travel time</p>
-            </div>
-            <span class="font-extrabold text-stone-900 text-sm">$${grabFare}</span>
-          </div>
-          <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-stone-200">
-            <div>
-              <p class="font-bold text-stone-900">Self-Drive Car Rental</p>
-              <p class="text-stone-400 text-[11px]">Daily Rate • Pickup at ${pickup}</p>
-            </div>
-            <span class="font-extrabold text-stone-900 text-sm">$${rentalRate.toFixed(2)}/day</span>
-          </div>
-        `;
-      }
-    }
+            document.getElementById('rideStatusCard').classList.remove('hidden');
+            document.getElementById('rideStatusText').innerText = `${appData.currentRide.tier} • En Route`;
+            document.getElementById('driverDetails').innerText = `Pick-up: ${pickup} → Drop-off: ${dropoff}`;
+            document.getElementById('rideETA').innerText = `ETA: 3 Mins`;
 
-    function saveCurrentOutfit() {
-      if (!state.equippedOutfit.top && !state.equippedOutfit.bottom) {
-        alert("Please equip or generate an outfit before saving!");
-        return;
-      }
-      alert("Outfit look saved to your travel plan!");
-    }
+            showToast(`Booked ${appData.currentRide.tier}! Driver notified.`);
+        }
 
-    function openAddActivityModal() {
-      const title = prompt("Enter Activity Title:");
-      if (title) {
-        state.itinerary.push({
-          id: Date.now(),
-          day: `Day ${state.itinerary.length + 1}`,
-          time: '10:00 AM',
-          title: title,
-          category: 'Sightseeing'
-        });
-        localStorage.setItem('ws_itinerary', JSON.stringify(state.itinerary));
-        renderItinerary();
-      }
-    }
+        function cancelRideSim() {
+            document.getElementById('rideStatusText').innerText = `Booking Cancelled`;
+            document.getElementById('driverDetails').innerText = `No active ride request.`;
+            document.getElementById('rideETA').innerText = `ETA: --`;
+            showToast("Ride request cancelled.");
+        }
 
-    function renderItinerary() {
-      const container = document.getElementById('itinerary-days-list');
-      if (!container) return;
-      
-      if (state.itinerary.length === 0) {
-        container.innerHTML = `<p class="text-xs text-stone-400 text-center py-4">No activities added yet.</p>`;
-        return;
-      }
+        function reserveCarRental() {
+            const loc = document.getElementById('rentalPickupLocation').value;
+            showToast(`Reserved ${appData.rental.vehicle} for ${appData.rental.days} days! Pickup at ${loc}.`);
+        }
 
-      container.innerHTML = state.itinerary.map(item => `
-        <div class="bg-white p-4 rounded-2xl border border-stone-200 flex justify-between items-center shadow-sm">
-          <div>
-            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">${item.day} • ${item.time}</span>
-            <h4 class="font-bold text-stone-900 text-sm mt-1">${item.title}</h4>
-          </div>
-          <span class="text-xs bg-stone-100 px-3 py-1 rounded-full text-stone-600 font-medium">${item.category}</span>
-        </div>
-      `).join('');
-    }
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-100px]', 'opacity-0');
+            }, 3000);
+        }
 
-    // Initialize application
-    document.addEventListener('DOMContentLoaded', () => {
-      renderForecast();
-      renderItinerary();
-      renderWardrobe();
-      renderOutfitCanvas();
-      updateOutfitTip();
-    });
-  </script>
+        // --- NAVIGATION / TAB SWITCHING ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+
+            // Update bottom nav active state
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.remove('text-earth-500');
+                    btn.classList.add('text-earth-900');
+                } else {
+                    btn.classList.remove('text-earth-900');
+                    btn.classList.add('text-earth-500');
+                }
+            });
+
+            // Update desktop nav active state
+            document.querySelectorAll('.desktop-nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.remove('text-earth-200');
+                    btn.classList.add('bg-terracotta-500', 'text-white');
+                } else {
+                    btn.classList.remove('bg-terracotta-500', 'text-white');
+                    btn.classList.add('text-earth-200');
+                }
+            });
+        }
+
+        // --- WEATHER & DESTINATION HANDLERS ---
+        function handleDestSearch(event) {
+            event.preventDefault();
+            const inputVal = document.getElementById('destInput').value.trim();
+            if (!inputVal) return;
+            appData.destination = inputVal;
+            const city = inputVal.split(',')[0].trim();
+            const country = inputVal.split(',')[1] ? inputVal.split(',')[1].trim() : 'Destination';
+
+            // Dynamic weather simulation based on city string
+            const hash = city.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const temp = 12 + (hash % 20);
+            const isCold = temp < 18;
+
+            appData.weather = {
+                city: city,
+                country: country,
+                temp: temp,
+                condition: isCold ? "Cool & Breezy" : "Sunny & Warm",
+                humidity: `${35 + (hash % 40)}%`,
+                rain: `${(hash % 30)}%`,
+                wind: `${8 + (hash % 15)} km/h`,
+                uv: isCold ? "Low (2)" : "Moderate (6)",
+                type: isCold ? "cold" : "warm",
+                forecast: [
+                    { day: "Day 1", temp: `${temp}°`, cond: isCold ? "Cool" : "Sunny", icon: isCold ? "fa-cloud" : "fa-sun" },
+                    { day: "Day 2", temp: `${temp + 2}°`, cond: "Clear", icon: "fa-sun" },
+                    { day: "Day 3", temp: `${temp - 1}°`, cond: isCold ? "Breezy" : "Warm", icon: isCold ? "fa-wind" : "fa-sun" },
+                    { day: "Day 4", temp: `${temp + 1}°`, cond: "Partly Cloudy", icon: "fa-cloud-sun" },
+                    { day: "Day 5", temp: `${temp}°`, cond: "Clear", icon: "fa-sun" }
+                ]
+            };
+
+            document.getElementById('currentDestBadge').innerText = inputVal;
+            renderWeather();
+            showToast(`Destination set to ${inputVal}! Weather updated.`);
+        }
+
+        function renderWeather() {
+            const w = appData.weather;
+            document.getElementById('weatherCity').innerText = w.city;
+            document.getElementById('weatherCountry').innerText = w.country;
+            document.getElementById('weatherTemp').innerText = `${w.temp}°`;
+            document.getElementById('weatherCondition').innerText = w.condition;
+            document.getElementById('weatherHumidity').innerText = w.humidity;
+            document.getElementById('weatherRain').innerText = w.rain;
+            document.getElementById('weatherWind').innerText = w.wind;
+            document.getElementById('weatherUV').innerText = w.uv;
+
+            const iconEl = document.getElementById('weatherIcon');
+            iconEl.innerHTML = w.type === 'cold' ? `<i class="fa-solid fa-cloud-sun"></i>` : `<i class="fa-solid fa-sun"></i>`;
+
+            document.getElementById('forecastContainer').innerHTML = w.forecast.map(item => `
+                <div class="bg-earth-50 p-3 rounded-2xl flex flex-col items-center justify-between text-center border border-earth-100">
+                    <span class="text-[10px] font-bold text-earth-500 uppercase">${item.day}</span>
+                    <i class="fa-solid ${item.icon} text-terracotta-500 text-lg my-2"></i>
+                    <span class="text-xs font-bold text-earth-900">${item.temp}</span>
+                    <span class="text-[9px] text-earth-500">${item.cond}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('packingAdvice').innerText = w.type === 'cold'
+                ? `Cool weather ahead (${w.temp}°C). Pack warm outerwear layers, sturdy boots, and tailored long trousers.`
+                : `Warm weather ahead (${w.temp}°C). Pack breathable linen shirts, cotton tees, sunglasses, and comfortable sneakers.`;
+        }
+
+        // --- WARDROBE MANAGEMENT ---
+        let activeFilter = 'all';
+
+        function renderWardrobe() {
+            const grid = document.getElementById('wardrobeGrid');
+            const items = activeFilter === 'all' 
+                ? appData.wardrobe 
+                : appData.wardrobe.filter(item => item.category === activeFilter);
+
+            grid.innerHTML = items.map(item => `
+                <div class="bg-white rounded-2xl p-2.5 border border-earth-100 shadow-xs flex flex-col group relative">
+                    <div class="w-full h-36 bg-earth-50 rounded-xl overflow-hidden mb-2 relative">
+                        <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <span class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-earth-900/80 backdrop-blur-xs text-white text-[9px] font-bold uppercase tracking-wider">${item.category}</span>
+                        <button onclick="deleteWardrobeItem('${item.id}')" class="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/80 hover:bg-red-500 hover:text-white text-earth-700 text-[10px] flex items-center justify-center transition shadow-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <h4 class="text-xs font-bold text-earth-900 truncate">${item.title}</h4>
+                    <span class="text-[10px] text-earth-500 capitalize font-medium">${item.weather || 'Versatile'} weather</span>
+                </div>
+            `).join('');
+        }
+
+        function filterWardrobe(cat) {
+            activeFilter = cat;
+            document.querySelectorAll('.wardrobe-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-cat') === cat) {
+                    btn.className = "wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-earth-900 text-white shadow-sm";
+                } else {
+                    btn.className = "wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-earth-700 border border-earth-200 hover:bg-earth-50";
+                }
+            });
+            renderWardrobe();
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const category = prompt("Enter category for this item (top, bottom, outerwear, shoes, accessory):", "top")?.toLowerCase().trim() || "top";
+                const validCategory = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].includes(category) ? category : 'top';
+                const title = prompt("Enter title for this item:", "Custom Clothes Item") || "Custom Clothes Item";
+
+                const newItem = {
+                    id: 'w_' + Date.now(),
+                    title: title,
+                    category: validCategory,
+                    weather: 'all',
+                    img: e.target.result
+                };
+
+                appData.wardrobe.push(newItem);
+                renderWardrobe();
+                renderPickerItems('top');
+                showToast("Photo added to your capsule wardrobe!");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- DIRECT CAMERA CAPTURE IN OUTFIT STUDIO & AUTO-WEATHER OUTFIT GENERATOR ---
+        function handleDirectOutfitCapture(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const category = prompt("Which clothing category is this snapshot?\n(Options: top, bottom, outerwear, shoes, accessory)", "top")?.toLowerCase().trim() || "top";
+                const validCategory = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].includes(category) ? category : 'top';
+                const title = prompt("Give this clothing item a name:", "My Captured " + validCategory.toUpperCase()) || "Captured Item";
+
+                const itemWeather = appData.weather.type;
+
+                const newItem = {
+                    id: 'w_' + Date.now(),
+                    title: title,
+                    category: validCategory,
+                    weather: itemWeather,
+                    img: e.target.result
+                };
+
+                appData.wardrobe.push(newItem);
+                appData.currentCanvas[validCategory] = newItem;
+
+                renderWardrobe();
+                renderPickerItems(validCategory);
+                updateCanvasSlot(validCategory);
+                updateWeatherOutfitMatchBanner();
+
+                showToast(`Captured & equipped "${title}" for ${appData.weather.city}!`);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateWeatherOutfitMatchBanner() {
+            const w = appData.weather;
+            document.getElementById('outfitDestWeatherLabel').innerText = `${w.city}'s Weather`;
+            document.getElementById('outfitTargetWeatherText').innerText = `${w.condition} (${w.temp}°)`;
+
+            const activeItems = Object.values(appData.currentCanvas).filter(Boolean);
+            if (activeItems.length === 0) {
+                document.getElementById('outfitMatchScore').innerText = "0% Equipped";
+                document.getElementById('outfitWeatherTip').innerText = `Tap "Snap Available Clothing" or "Generate Weather Outfit" to prepare your look for ${w.city}.`;
+                return;
+            }
+
+            let matchScore = 90;
+            let tip = "";
+
+            if (w.type === 'cold') {
+                if (!appData.currentCanvas.outerwear) {
+                    matchScore -= 20;
+                    tip = `Tip for ${w.city}: It's ${w.temp}°! Consider snapping or equipping an outerwear layer like a trench coat or jacket.`;
+                } else {
+                    tip = `Great setup! Your outerwear layer provides sufficient protection against ${w.city}'s chilly weather.`;
+                }
+            } else {
+                if (appData.currentCanvas.outerwear) {
+                    matchScore -= 10;
+                    tip = `Tip for ${w.city}: Warm weather (${w.temp}°). A heavy jacket may feel warm; stick to light tops and sunglasses.`;
+                } else {
+                    tip = `Perfect lightweight outfit for ${w.city}'s warm & clear weather!`;
+                }
+            }
+
+            document.getElementById('outfitMatchScore').innerHTML = `<i class="fa-solid fa-shield-check"></i> ${matchScore}% Weather Match`;
+            document.getElementById('outfitWeatherTip').innerText = tip;
+        }
+
+        function deleteWardrobeItem(id) {
+            appData.wardrobe = appData.wardrobe.filter(item => item.id !== id);
+            renderWardrobe();
+            renderPickerItems('top');
+            showToast("Item removed from wardrobe.");
+        }
+
+        function loadUnisexPresets() {
+            appData.wardrobe = [...UNISEX_PRESETS];
+            renderWardrobe();
+            renderPickerItems('top');
+            showToast("Restored unisex preset wardrobe!");
+        }
+
+        // --- OUTFIT STUDIO & CANVAS ---
+        let activePickerCategory = 'top';
+
+        function switchPickerCategory(cat) {
+            activePickerCategory = cat;
+            document.querySelectorAll('.picker-cat-btn').forEach(btn => {
+                if (btn.getAttribute('data-cat') === cat) {
+                    btn.className = "picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-bold rounded-lg bg-white shadow-xs text-earth-900";
+                } else {
+                    btn.className = "picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-bold rounded-lg text-earth-700 hover:text-earth-900";
+                }
+            });
+            renderPickerItems(cat);
+        }
+
+        function renderPickerItems(cat) {
+            const container = document.getElementById('pickerItemsGrid');
+            const items = appData.wardrobe.filter(item => item.category === cat);
+
+            if (items.length === 0) {
+                container.innerHTML = `<p class="col-span-3 text-center text-xs text-earth-500 py-6">No items found in this category.</p>`;
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                <div onclick="equipItem('${item.id}')" class="bg-earth-50 hover:bg-earth-100 p-2 rounded-2xl border border-earth-100 cursor-pointer transition flex flex-col items-center text-center group">
+                    <img src="${item.img}" alt="${item.title}" class="w-full h-16 object-cover rounded-xl mb-1 group-hover:scale-105 transition">
+                    <span class="text-[10px] font-bold text-earth-900 truncate w-full">${item.title}</span>
+                </div>
+            `).join('');
+        }
+
+        function equipItem(itemId) {
+            const item = appData.wardrobe.find(i => i.id === itemId);
+            if (!item) return;
+
+            appData.currentCanvas[item.category] = item;
+            updateCanvasSlot(item.category);
+            showToast(`Equipped ${item.title}`);
+        }
+
+        function updateCanvasSlot(category) {
+            const slot = document.getElementById(`slot-${category}`);
+            const item = appData.currentCanvas[category];
+
+            if (!item) {
+                slot.innerHTML = `<span class="text-xs text-earth-500 uppercase font-bold tracking-widest text-[10px]">${category} Layer</span>`;
+            } else {
+                slot.innerHTML = `
+                    <div class="flex items-center gap-3 w-full h-full px-2">
+                        <img src="${item.img}" class="w-12 h-12 object-cover rounded-lg border border-earth-100">
+                        <div class="flex-1 text-left">
+                            <p class="text-xs font-bold text-earth-900">${item.title}</p>
+                            <span class="text-[9px] uppercase tracking-wider font-semibold text-earth-500">${item.category}</span>
+                        </div>
+                        <button onclick="unequipItem('${category}')" class="text-earth-400 hover:text-red-500 p-1 text-xs">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function unequipItem(category) {
+            appData.currentCanvas[category] = null;
+            updateCanvasSlot(category);
+        }
+
+        function clearCanvas() {
+            appData.currentCanvas = { top: null, bottom: null, outerwear: null, shoes: null, accessory: null };
+            ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].forEach(cat => updateCanvasSlot(cat));
+            showToast("Canvas cleared.");
+        }
+
+        function autoGenerateOutfit() {
+            const weatherType = appData.weather.type;
+            const tops = appData.wardrobe.filter(i => i.category === 'top');
+            const bottoms = appData.wardrobe.filter(i => i.category === 'bottom');
+            const outerw = appData.wardrobe.filter(i => i.category === 'outerwear');
+            const shoes = appData.wardrobe.filter(i => i.category === 'shoes');
+            const accs = appData.wardrobe.filter(i => i.category === 'accessory');
+
+            appData.currentCanvas = {
+                top: tops.length ? tops[Math.floor(Math.random() * tops.length)] : null,
+                bottom: bottoms.length ? bottoms[Math.floor(Math.random() * bottoms.length)] : null,
+                outerwear: weatherType === 'cold' && outerw.length ? outerw[Math.floor(Math.random() * outerw.length)] : null,
+                shoes: shoes.length ? shoes[Math.floor(Math.random() * shoes.length)] : null,
+                accessory: accs.length ? accs[Math.floor(Math.random() * accs.length)] : null
+            };
+
+            ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].forEach(cat => updateCanvasSlot(cat));
+            updateWeatherOutfitMatchBanner();
+            showToast(`Auto-generated look based on ${appData.weather.city}'s weather!`);
+        }
+
+        function saveCurrentOutfit() {
+            const titleInput = document.getElementById('outfitNameInput').value.trim() || `Look #${appData.outfits.length + 1}`;
+            const equippedCount = Object.values(appData.currentCanvas).filter(Boolean).length;
+
+            if (equippedCount === 0) {
+                showToast("Please add at least one item to the canvas before saving.");
+                return;
+            }
+
+            const outfit = {
+                id: 'outfit_' + Date.now(),
+                title: titleInput,
+                items: { ...appData.currentCanvas }
+            };
+
+            appData.outfits.push(outfit);
+            document.getElementById('outfitNameInput').value = '';
+            renderSavedOutfits();
+            showToast("Outfit saved to lookbook!");
+        }
+
+        function renderSavedOutfits() {
+            const grid = document.getElementById('savedOutfitsGrid');
+            if (appData.outfits.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-xs text-earth-500 italic text-center py-4">No saved outfits yet. Assemble a look above and tap "Save Outfit".</p>`;
+                return;
+            }
+
+            grid.innerHTML = appData.outfits.map(outfit => `
+                <div class="bg-white rounded-2xl p-4 border border-earth-100 shadow-sm flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-xs font-bold text-earth-900">${outfit.title}</h4>
+                        <button onclick="deleteOutfit('${outfit.id}')" class="text-earth-400 hover:text-red-500 text-xs">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1.5 mb-3">
+                        ${Object.values(outfit.items).filter(Boolean).map(item => `
+                            <img src="${item.img}" class="w-full h-14 object-cover rounded-lg border border-earth-100" title="${item.title}">
+                        `).join('')}
+                    </div>
+                    <button onclick="wearOutfit('${outfit.id}')" class="w-full py-1.5 bg-earth-100 hover:bg-earth-200 text-earth-800 rounded-xl text-[10px] font-bold uppercase tracking-wider transition">
+                        Equip to Canvas
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function wearOutfit(outfitId) {
+            const outfit = appData.outfits.find(o => o.id === outfitId);
+            if (!outfit) return;
+            appData.currentCanvas = { ...outfit.items };
+            ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].forEach(cat => updateCanvasSlot(cat));
+            showToast(`Equipped "${outfit.title}"`);
+        }
+
+        function deleteOutfit(outfitId) {
+            appData.outfits = appData.outfits.filter(o => o.id !== outfitId);
+            renderSavedOutfits();
+            showToast("Outfit removed from lookbook.");
+        }
+
+        // --- ITINERARY PLANNER ---
+        let selectedDay = 1;
+
+        function renderItinerary() {
+            const nav = document.getElementById('itineraryDaysNav');
+            nav.innerHTML = [1, 2, 3, 4, 5].map(day => `
+                <button onclick="selectItineraryDay(${day})" class="px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${day === selectedDay ? 'bg-earth-900 text-white shadow-xs' : 'bg-white text-earth-700 border border-earth-200 hover:bg-earth-50'}">
+                    Day ${day}
+                </button>
+            `).join('');
+
+            const list = document.getElementById('itineraryList');
+            const dayItems = appData.itinerary.filter(i => i.day === selectedDay);
+
+            if (dayItems.length === 0) {
+                list.innerHTML = `
+                    <div class="bg-white rounded-3xl p-8 border border-earth-100 text-center">
+                        <i class="fa-solid fa-calendar-plus text-earth-300 text-3xl mb-2"></i>
+                        <p class="text-xs font-semibold text-earth-700">No activities scheduled for Day ${selectedDay}</p>
+                        <p class="text-[10px] text-earth-500 mb-4">Tap "Add Activity" above to start building your day.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = dayItems.map(item => `
+                <div class="bg-white rounded-2xl p-4 border border-earth-100 shadow-xs flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="px-3 py-1.5 rounded-xl bg-earth-50 text-earth-900 text-xs font-bold font-mono border border-earth-100">${item.time}</span>
+                        <div>
+                            <h4 class="text-xs font-bold text-earth-900">${item.title}</h4>
+                            <p class="text-[10px] text-earth-500 flex items-center gap-1">
+                                <i class="fa-solid fa-location-dot text-terracotta-500"></i> ${item.location}
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="deleteItineraryItem('${item.id}')" class="text-earth-400 hover:text-red-500 text-xs">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function selectItineraryDay(day) {
+            selectedDay = day;
+            renderItinerary();
+        }
+
+        function openItineraryModal() {
+            const title = prompt("Enter activity title (e.g., Museum Visit, Sightseeing):");
+            if (!title) return;
+            const location = prompt("Enter location name:", appData.destination) || appData.destination;
+            const time = prompt("Enter time (e.g., 14:00):", "12:00") || "12:00";
+
+            appData.itinerary.push({
+                id: 'i_' + Date.now(),
+                day: selectedDay,
+                time: time,
+                title: title,
+                location: location,
+                type: 'activity'
+            });
+
+            renderItinerary();
+            showToast("Activity added to itinerary!");
+        }
+
+        function deleteItineraryItem(id) {
+            appData.itinerary = appData.itinerary.filter(i => i.id !== id);
+            renderItinerary();
+            showToast("Activity removed.");
+        }
+
+        window.onload = function() {
+            renderWeather();
+            calculateCurrentRoute();
+            updateRentalPrice();
+            renderWardrobe();
+            renderPickerItems('top');
+            renderSavedOutfits();
+            renderItinerary();
+            updateWeatherOutfitMatchBanner();
+        };
+    </script>
 </body>
 </html>

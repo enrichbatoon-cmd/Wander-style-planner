@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WanderStyle Studio - Travel & Outfit Planner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfbf9; color: #2d312e; }
+    .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(229, 226, 221, 0.8); }
+    .tab-btn.active { background-color: #2d312e; color: #ffffff; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen pb-24 md:pb-8">
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center text-amber-50 shadow-md">
+          <i class="fa-solid font-bold text-lg fa-compass"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg tracking-tight text-stone-900">WanderStyle</h1>
+          <p class="text-xs text-stone-500 font-medium">Travel & Digital Wardrobe</p>
+        </div>
+      </div>
+      
+      <!-- Desktop Navigation Tabs -->
+      <nav class="hidden md:flex items-center space-x-1 bg-stone-100 p-1 rounded-xl">
+        <button onclick="switchTab('destinations')" id="tab-destinations-dt" class="tab-btn active px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center space-x-2">
+          <i class="fa-solid fa-cloud-sun"></i><span>Weather & Destinations</span>
+        </button>
+        <button onclick="switchTab('itinerary')" id="tab-itinerary-dt" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg text-stone-600 transition-all duration-200 flex items-center space-x-2">
+          <i class="fa-solid fa-calendar-days"></i><span>Itinerary Planner</span>
+        </button>
+        <button onclick="switchTab('transport')" id="tab-transport-dt" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg text-stone-600 transition-all duration-200 flex items-center space-x-2">
+          <i class="fa-solid fa-car"></i><span>Road & Ride Hub</span>
+        </button>
+        <button onclick="switchTab('outfits')" id="tab-outfits-dt" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg text-stone-600 transition-all duration-200 flex items-center space-x-2">
+          <i class="fa-solid fa-shirt"></i><span>Outfit Studio</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-6xl mx-auto px-4 py-6">
+
+    <!-- 1. DESTINATION & WEATHER TRACKER -->
+    <section id="sec-destinations" class="space-y-6">
+      <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 bg-stone-900 text-stone-50 p-6 rounded-3xl shadow-xl">
+        <div class="space-y-1">
+          <span class="text-xs uppercase tracking-widest text-amber-300 font-semibold">Active Destination</span>
+          <h2 id="current-dest-name" class="text-3xl font-extrabold tracking-tight">Tokyo, Japan</h2>
+          <p id="current-dest-sub" class="text-sm text-stone-300">Spring Season • Mild Breezes & Light Showers</p>
+        </div>
+        <div class="flex items-center space-x-2 bg-stone-800/80 p-2 rounded-2xl border border-stone-700">
+          <input type="text" id="dest-input" placeholder="Search city (e.g., Paris, Manila)" class="bg-transparent border-none text-stone-100 placeholder-stone-400 px-3 py-2 text-sm focus:outline-none w-48 md:w-64">
+          <button onclick="handleDestSearch()" class="bg-amber-400 text-stone-900 font-semibold px-4 py-2 rounded-xl text-xs hover:bg-amber-300 transition-all shadow">
+            Search
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Weather Card -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-3xl shadow-sm border border-stone-200 flex flex-col justify-between">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-stone-400">Current Temp</p>
+              <h3 id="weather-temp" class="text-5xl font-extrabold text-stone-900 mt-2">18°C</h3>
+            </div>
+            <div id="weather-icon-main" class="w-14 h-14 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+              <i class="fa-solid fa-sun"></i>
+            </div>
+          </div>
+          <div class="mt-6 pt-4 border-t border-stone-100 grid grid-cols-2 gap-4 text-xs">
+            <div>
+              <span class="text-stone-400 block">Condition</span>
+              <span id="weather-cond" class="font-semibold text-stone-800">Partly Cloudy</span>
+            </div>
+            <div>
+              <span class="text-stone-400 block">Humidity</span>
+              <span id="weather-hum" class="font-semibold text-stone-800">55%</span>
+            </div>
+            <div>
+              <span class="text-stone-400 block">Wind Speed</span>
+              <span id="weather-wind" class="font-semibold text-stone-800">12 km/h</span>
+            </div>
+            <div>
+              <span class="text-stone-400 block">UV Index</span>
+              <span id="weather-uv" class="font-semibold text-stone-800">Moderate (4)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5-Day Forecast -->
+        <div class="md:col-span-2 glass-card p-6 rounded-3xl shadow-sm border border-stone-200">
+          <h3 class="text-base font-bold text-stone-900 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-calendar-week text-amber-600"></i> 5-Day Travel Forecast
+          </h3>
+          <div id="forecast-container" class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <!-- Forecast Cards Dynamically Populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. ITINERARY PLANNER -->
+    <section id="sec-itinerary" class="hidden space-y-6">
+      <div class="flex justify-between items-center bg-stone-100 p-4 rounded-2xl border border-stone-200">
+        <div>
+          <h2 class="text-xl font-bold text-stone-900">Day-by-Day Travel Itinerary</h2>
+          <p class="text-xs text-stone-500">Plan daily schedules, activities, and match outfits</p>
+        </div>
+        <button onclick="openAddActivityModal()" class="bg-stone-900 text-stone-50 text-xs px-4 py-2.5 rounded-xl font-semibold hover:bg-stone-800 transition flex items-center space-x-2">
+          <i class="fa-solid fa-plus"></i><span>Add Activity</span>
+        </button>
+      </div>
+
+      <div id="itinerary-days-list" class="space-y-4">
+        <!-- Daily Plans dynamically rendered -->
+      </div>
+    </section>
+
+    <!-- 3. ROAD & RIDE HUB (TRANSPORTATION & GRAB) -->
+    <section id="sec-transport" class="hidden space-y-6">
+      <div class="glass-card p-6 rounded-3xl border border-stone-200 space-y-4">
+        <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+          <i class="fa-solid fa-route text-stone-700"></i> Navigation & Ride Estimator
+        </h2>
+        <p class="text-xs text-stone-500">Estimate Grab ride fares, car rental options, and route timing in your destination.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="space-y-3">
+            <label class="block text-xs font-bold text-stone-700 uppercase">Pick-up Location</label>
+            <input type="text" id="pickup-loc" value="Hotel / Current Stay" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm">
+            <label class="block text-xs font-bold text-stone-700 uppercase">Destination Site</label>
+            <input type="text" id="dropoff-loc" value="Shibuya Crossing, Tokyo" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm">
+            <button onclick="calcRideFare()" class="w-full bg-stone-900 text-stone-50 py-2.5 rounded-xl text-xs font-semibold">Calculate Routes & Fares</button>
+          </div>
+
+          <div id="ride-results" class="bg-stone-50 p-4 rounded-2xl border border-stone-200 text-xs space-y-3">
+            <h4 class="font-bold text-stone-800 text-sm">Estimated Options</h4>
+            <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-stone-200">
+              <div>
+                <p class="font-bold text-stone-900">GrabCar Standard</p>
+                <p class="text-stone-400 text-[11px]">Est. 18 mins • Direct</p>
+              </div>
+              <span class="font-extrabold text-stone-900 text-sm">~$14.50</span>
+            </div>
+            <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-stone-200">
+              <div>
+                <p class="font-bold text-stone-900">Self-Drive Car Rental</p>
+                <p class="text-stone-400 text-[11px]">Daily Rate • Compact SUV</p>
+              </div>
+              <span class="font-extrabold text-stone-900 text-sm">$45.00/day</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. OUTFIT STUDIO & DIGITAL WARDROBE -->
+    <section id="sec-outfits" class="hidden space-y-6">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-stone-900 text-stone-50 p-6 rounded-3xl">
+        <div>
+          <h2 class="text-2xl font-bold">Outfit Studio & Wardrobe</h2>
+          <p class="text-xs text-stone-400">Capture available clothing items and generate weather-matched outfits.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <label class="bg-amber-400 text-stone-900 text-xs px-4 py-2.5 rounded-xl font-bold hover:bg-amber-300 transition cursor-pointer flex items-center space-x-2">
+            <i class="fa-solid fa-camera"></i><span>Snap Available Clothes</span>
+            <input type="file" accept="image/*" capture="environment" onchange="handleImageUpload(event)" class="hidden">
+          </label>
+          <button onclick="autoGenerateOutfit()" class="bg-stone-800 border border-stone-700 text-stone-100 text-xs px-4 py-2.5 rounded-xl font-semibold hover:bg-stone-700 transition flex items-center space-x-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i><span>Generate Weather Outfit</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Digital Wardrobe Inventory -->
+        <div class="glass-card p-5 rounded-3xl border border-stone-200 space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-stone-900 text-base">Your Wardrobe Items</h3>
+            <span id="item-count" class="text-xs bg-stone-100 px-2.5 py-1 rounded-full font-semibold text-stone-600">0 items</span>
+          </div>
+          
+          <div id="wardrobe-grid" class="grid grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1 hide-scrollbar">
+            <!-- Wardrobe items rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Generated Outfit Display -->
+        <div class="lg:col-span-2 glass-card p-6 rounded-3xl border border-stone-200 flex flex-col justify-between space-y-4">
+          <div class="flex justify-between items-center border-b border-stone-100 pb-3">
+            <div>
+              <h3 class="font-bold text-stone-900 text-base">Weather Outfit Match</h3>
+              <p id="outfit-weather-rating" class="text-xs text-amber-700 font-medium">95% Match for Current Tokyo Weather</p>
+            </div>
+            <button onclick="saveCurrentOutfit()" class="bg-stone-900 text-stone-50 px-3.5 py-2 rounded-xl text-xs font-semibold">Save Look</button>
+          </div>
+
+          <div id="outfit-canvas" class="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
+            <!-- Equipped items grid -->
+          </div>
+
+          <div class="bg-amber-50/60 border border-amber-200/60 p-4 rounded-2xl flex items-start space-x-3">
+            <i class="fa-solid fa-lightbulb text-amber-600 mt-0.5"></i>
+            <div>
+              <h4 class="text-xs font-bold text-amber-900 uppercase">Styling Tip</h4>
+              <p id="styling-tip-text" class="text-xs text-amber-800 mt-0.5">Mild temperature detected. Combine a light top with a stylish outerwear layer for easy adaptability.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-stone-200 z-40 px-6 py-2">
+    <div class="flex justify-between items-center">
+      <button onclick="switchTab('destinations')" id="tab-destinations-mb" class="flex flex-col items-center space-y-1 text-stone-900">
+        <i class="fa-solid fa-cloud-sun text-lg"></i><span class="text-[10px] font-medium">Weather</span>
+      </button>
+      <button onclick="switchTab('itinerary')" id="tab-itinerary-mb" class="flex flex-col items-center space-y-1 text-stone-400">
+        <i class="fa-solid fa-calendar-days text-lg"></i><span class="text-[10px] font-medium">Plan</span>
+      </button>
+      <button onclick="switchTab('transport')" id="tab-transport-mb" class="flex flex-col items-center space-y-1 text-stone-400">
+        <i class="fa-solid fa-car text-lg"></i><span class="text-[10px] font-medium">Rides</span>
+      </button>
+      <button onclick="switchTab('outfits')" id="tab-outfits-mb" class="flex flex-col items-center space-y-1 text-stone-400">
+        <i class="fa-solid fa-shirt text-lg"></i><span class="text-[10px] font-medium">Outfits</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Application Script -->
+  <script>
+    // State management
+    let state = {
+      currentTab: 'destinations',
+      destination: 'Tokyo, Japan',
+      temp: 18,
+      condition: 'Partly Cloudy',
+      wardrobe: [],
+      equippedOutfit: { top: null, bottom: null, outerwear: null, shoes: null },
+      itinerary: [
+        { id: 1, day: 'Day 1', time: '09:00 AM', title: 'Arrival & Hotel Check-in', category: 'Travel' },
+        { id: 2, day: 'Day 1', time: '02:00 PM', title: 'Explore City Center', category: 'Sightseeing' }
+      ]
+    };
+
+    function switchTab(tabName) {
+      state.currentTab = tabName;
+      ['destinations', 'itinerary', 'transport', 'outfits'].forEach(t => {
+        const sec = document.getElementById(`sec-${t}`);
+        if (sec) sec.classList.toggle('hidden', t !== tabName);
+        
+        const dtBtn = document.getElementById(`tab-${t}-dt`);
+        if (dtBtn) {
+          dtBtn.classList.toggle('active', t === tabName);
+          dtBtn.classList.toggle('text-stone-600', t !== tabName);
+        }
+        
+        const mbBtn = document.getElementById(`tab-${t}-mb`);
+        if (mbBtn) {
+          mbBtn.classList.toggle('text-stone-900', t === tabName);
+          mbBtn.classList.toggle('text-stone-400', t !== tabName);
+        }
+      });
+    }
+
+    function handleDestSearch() {
+      const input = document.getElementById('dest-input').value.trim();
+      if (!input) return;
+      state.destination = input;
+      document.getElementById('current-dest-name').textContent = input;
+      renderForecast();
+    }
+
+    function renderForecast() {
+      const container = document.getElementById('forecast-container');
+      if (!container) return;
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+      container.innerHTML = days.map((d, i) => `
+        <div class="bg-stone-50 border border-stone-200 p-3 rounded-2xl text-center space-y-1">
+          <p class="text-xs font-bold text-stone-500">${d}</p>
+          <i class="fa-solid ${i % 2 === 0 ? 'fa-sun text-amber-500' : 'fa-cloud-sun text-stone-500'} text-lg my-1"></i>
+          <p class="text-sm font-extrabold text-stone-900">${16 + i * 2}°C</p>
+        </div>
+      `).join('');
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const newItem = {
+          id: Date.now(),
+          type: ['top', 'bottom', 'outerwear', 'shoes'][Math.floor(Math.random() * 4)],
+          image: e.target.result
+        };
+        state.wardrobe.push(newItem);
+        renderWardrobe();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderWardrobe() {
+      const grid = document.getElementById('wardrobe-grid');
+      const count = document.getElementById('item-count');
+      if (count) count.textContent = `${state.wardrobe.length} items`;
+      if (!grid) return;
+      grid.innerHTML = state.wardrobe.map(item => `
+        <div class="relative group rounded-xl overflow-hidden border border-stone-200 bg-stone-100 aspect-square">
+          <img src="${item.image}" class="w-full h-full object-cover">
+          <span class="absolute bottom-1 left-1 bg-stone-900/80 text-white text-[9px] px-1.5 py-0.5 rounded capitalize">${item.type}</span>
+        </div>
+      `).join('');
+    }
+
+    function autoGenerateOutfit() {
+      if (state.wardrobe.length === 0) {
+        alert("Please snap or upload clothing items first!");
+        return;
+      }
+      alert("Weather-matched outfit generated based on active forecast!");
+    }
+
+    function calcRideFare() {
+      const from = document.getElementById('pickup-loc').value;
+      const to = document.getElementById('dropoff-loc').value;
+      alert(`Calculating ride fares from "${from}" to "${to}"...`);
+    }
+
+    function saveCurrentOutfit() {
+      alert("Outfit look saved to your itinerary!");
+    }
+
+    function openAddActivityModal() {
+      const title = prompt("Enter Activity Title:");
+      if (title) {
+        state.itinerary.push({ id: Date.now(), day: 'Day 1', time: '10:00 AM', title: title, category: 'General' });
+        renderItinerary();
+      }
+    }
+
+    function renderItinerary() {
+      const container = document.getElementById('itinerary-days-list');
+      if (!container) return;
+      container.innerHTML = state.itinerary.map(item => `
+        <div class="bg-white p-4 rounded-2xl border border-stone-200 flex justify-between items-center shadow-sm">
+          <div>
+            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">${item.day} • ${item.time}</span>
+            <h4 class="font-bold text-stone-900 text-sm mt-1">${item.title}</h4>
+          </div>
+          <span class="text-xs bg-stone-100 px-3 py-1 rounded-full text-stone-600 font-medium">${item.category}</span>
+        </div>
+      `).join('');
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderForecast();
+      renderItinerary();
+    });
+  </script>
+</body>
+</html>

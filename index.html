@@ -252,6 +252,17 @@
                 </div>
             </div>
 
+            <!-- Gentle & Encouraging Daily Purpose Bible Verse Card -->
+            <div class="bg-stone-100/90 border border-stone-200 rounded-2xl p-4 flex items-center gap-3.5 shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-charcoal-900 text-sand-500 flex items-center justify-center text-base shrink-0 shadow-xs">
+                    <i class="fa-solid fa-feather-pointed"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-xs font-bold text-black italic leading-snug">"Commit to the Lord whatever you do, and your plans will succeed. In their hearts humans plan their course, but the Lord establishes their steps."</p>
+                    <p class="text-[10px] font-black text-charcoal-800 uppercase tracking-widest mt-1">— Proverbs 16:3, 9 • Purpose in Every Journey</p>
+                </div>
+            </div>
+
             <!-- Day Tabs Nav with Add/Remove Day controls -->
             <div class="flex items-center justify-between gap-2 bg-stone-100 p-2 rounded-2xl border border-stone-200">
                 <div id="itineraryDaysNav" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
@@ -786,6 +797,11 @@
                     Sign In to Account
                 </button>
             </form>
+            <div id="signOutContainer" class="pt-2 border-t border-stone-200 hidden">
+                <button onclick="handleSignOut()" class="w-full py-2 bg-red-50 hover:bg-red-100 text-red-600 font-extrabold rounded-xl text-xs border border-red-200 transition">
+                    <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Sign Out of Account
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1104,9 +1120,51 @@
                 showToast(`Welcome back, ${name}! Logged in.`);
             }
 
-            document.getElementById('userBadgeText').innerText = appData.user.name;
-            document.getElementById('appLockOverlay').classList.add('hidden');
+            // Save user session to localStorage for persistent access
+            try {
+                localStorage.setItem('wanderstyle_user', JSON.stringify(appData.user));
+            } catch (e) {
+                console.warn('localStorage not accessible', e);
+            }
+
+            updateAuthUI();
             closeAuthModal();
+        }
+
+        function updateAuthUI() {
+            if (appData.user) {
+                document.getElementById('userBadgeText').innerText = appData.user.name;
+                document.getElementById('appLockOverlay').classList.add('hidden');
+                document.getElementById('signOutContainer').classList.remove('hidden');
+            } else {
+                document.getElementById('userBadgeText').innerText = "Sign In";
+                document.getElementById('appLockOverlay').classList.remove('hidden');
+                document.getElementById('signOutContainer').classList.add('hidden');
+            }
+        }
+
+        function handleSignOut() {
+            appData.user = null;
+            try {
+                localStorage.removeItem('wanderstyle_user');
+            } catch (e) {
+                console.warn('localStorage not accessible', e);
+            }
+            updateAuthUI();
+            closeAuthModal();
+            showToast("Signed out successfully.");
+        }
+
+        function checkSavedUserSession() {
+            try {
+                const savedUser = localStorage.getItem('wanderstyle_user');
+                if (savedUser) {
+                    appData.user = JSON.parse(savedUser);
+                }
+            } catch (e) {
+                console.warn('localStorage not accessible', e);
+            }
+            updateAuthUI();
         }
 
         // --- DYNAMIC DESTINATION, CITY SUGGESTIONS & CURRENCY SYNCING ---
@@ -1474,6 +1532,7 @@
         }
 
         window.onload = function() {
+            checkSavedUserSession();
             setAppDestination("Manila, Philippines");
             renderWardrobe();
             renderPickerItems('top');

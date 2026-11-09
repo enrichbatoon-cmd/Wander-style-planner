@@ -53,12 +53,16 @@
             background-color: #F8F7F4;
             color: #1F1D1A;
         }
+        /* Custom scrollbar for horizontal wardrobe sliders */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+        .touch-action-manipulation {
+            touch-action: manipulation;
         }
     </style>
 </head>
@@ -78,36 +82,36 @@
                     </div>
                 </div>
 
+                <!-- Destination Quick Badge -->
                 <div class="flex items-center gap-2">
                     <button onclick="switchTab('destination')" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200/80 transition text-xs font-extrabold text-black border border-stone-300">
                         <i class="fa-solid fa-location-dot text-terracotta-500"></i>
                         <span id="currentDestBadge">Manila, Philippines</span>
                     </button>
-                    <!-- Account Profile / Sign In Button -->
-                    <button id="authHeaderBtn" onclick="openAuthModal()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-charcoal-900 text-white hover:bg-black transition text-xs font-extrabold shadow-sm border border-stone-700">
+                    <!-- Account Login / Profile Button -->
+                    <button id="authHeaderBtn" onclick="openAuthModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-charcoal-900 text-white hover:bg-black transition text-xs font-extrabold shadow-sm border border-stone-700">
                         <i class="fa-solid fa-user-circle text-sand-500 text-sm"></i>
-                        <span id="userBadgeText">Sign In / Register</span>
+                        <span id="userBadgeText">Sign In</span>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- MANDATORY ACCESS CONTROL LOCK OVERLAY FOR NEW/GUEST USERS -->
+    <!-- FULL APP ACCESS CONTROL LOCK OVERLAY -->
     <div id="appLockOverlay" class="fixed inset-0 z-50 bg-charcoal-900/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center text-white">
         <div class="max-w-md w-full bg-stone-900 border border-stone-700 p-8 rounded-3xl shadow-2xl space-y-5">
             <div class="w-16 h-16 rounded-3xl bg-terracotta-500 text-white mx-auto flex items-center justify-center text-2xl shadow-lg">
-                <i class="fa-solid fa-user-plus"></i>
+                <i class="fa-solid fa-lock"></i>
             </div>
-            <h2 class="text-2xl font-black text-white">Welcome to WanderStyle Studio</h2>
-            <p class="text-xs text-stone-300 leading-relaxed font-medium">New visitors are required to create an account or sign in to access geo-synced travel guides, driver dispatch, smart wardrobe matching, and payment setup.</p>
-            
-            <div class="pt-2 flex flex-col gap-2.5">
-                <button onclick="openAuthModal('register')" class="w-full py-3.5 bg-terracotta-500 hover:bg-terracotta-600 text-white font-extrabold rounded-2xl text-xs uppercase tracking-wider transition shadow-md">
-                    <i class="fa-solid fa-user-plus mr-1.5"></i> Create New Account
+            <h2 class="text-2xl font-black text-white">Unlock WanderStyle Studio</h2>
+            <p class="text-xs text-stone-300 leading-relaxed font-medium">Please sign in or create a free account to access city recommendations, local driver dispatch, smart wardrobe generation, and day-by-day travel planning.</p>
+            <div class="pt-2 flex flex-col gap-2">
+                <button onclick="openAuthModal('login')" class="w-full py-3.5 bg-terracotta-500 hover:bg-terracotta-600 text-white font-extrabold rounded-2xl text-xs uppercase tracking-wider transition shadow-md">
+                    <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Sign In to Account
                 </button>
-                <button onclick="openAuthModal('login')" class="w-full py-3.5 bg-stone-800 hover:bg-stone-700 text-stone-200 font-extrabold rounded-2xl text-xs uppercase tracking-wider transition border border-stone-600">
-                    <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Already have an account? Sign In
+                <button onclick="openAuthModal('register')" class="w-full py-3.5 bg-stone-800 hover:bg-stone-700 text-stone-200 font-extrabold rounded-2xl text-xs uppercase tracking-wider transition border border-stone-600">
+                    <i class="fa-solid fa-user-plus mr-1.5"></i> Create New Account
                 </button>
             </div>
         </div>
@@ -118,28 +122,23 @@
 
         <!-- TAB 1: DESTINATION & WEATHER -->
         <section id="tab-destination" class="tab-content space-y-6">
+            <!-- Search Banner -->
             <div class="relative rounded-3xl bg-charcoal-900 p-6 sm:p-10 text-canvas shadow-xl overflow-hidden border border-stone-800">
                 <div id="heroBgImage" class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-30 transition-all duration-700"></div>
                 <div class="relative z-10 max-w-2xl">
                     <span class="inline-block px-3.5 py-1 rounded-full bg-stone-900/90 backdrop-blur-md text-[11px] font-bold uppercase tracking-widest text-sand-500 mb-3 border border-stone-700">Trip Destination Hub</span>
                     <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2 text-white drop-shadow-sm">Where are you heading next?</h2>
-                    <p class="text-stone-200 text-xs sm:text-sm mb-6 leading-relaxed font-medium">Use your current location or input your destination to sync weather, local payment methods, and nearby tourist spot clusters.</p>
+                    <p class="text-stone-200 text-xs sm:text-sm mb-6 leading-relaxed font-medium">Input country and specific cities or places you want to visit to receive tailored city suggestions, localized pricing, and weather outfit advice.</p>
                     
-                    <div class="flex flex-col sm:flex-row gap-2.5 mb-4">
-                        <button onclick="detectUserLocation()" class="flex-1 py-3 bg-stone-800 hover:bg-stone-700 text-sand-500 font-extrabold rounded-2xl text-xs uppercase tracking-wider transition border border-stone-700 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-location-crosshairs text-sm"></i> Auto-Detect My Location
-                        </button>
-                    </div>
-
                     <form id="destForm" onsubmit="handleDestSearch(event)" class="flex flex-col gap-3">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <div class="relative">
                                 <i class="fa-solid fa-earth-americas absolute left-4 top-1/2 -translate-y-1/2 text-charcoal-900"></i>
-                                <input type="text" id="destCountryInput" placeholder="Target Country (e.g. Philippines, Japan)" required class="w-full pl-11 pr-4 py-3.5 rounded-2xl text-charcoal-900 bg-white shadow-inner focus:outline-none focus:ring-2 focus:ring-terracotta-500 text-xs font-bold border border-stone-300">
+                                <input type="text" id="destCountryInput" placeholder="Target Country (e.g. Philippines, Japan, France)" required class="w-full pl-11 pr-4 py-3.5 rounded-2xl text-charcoal-900 bg-white shadow-inner focus:outline-none focus:ring-2 focus:ring-terracotta-500 text-xs font-bold border border-stone-300">
                             </div>
                             <div class="relative">
                                 <i class="fa-solid fa-city absolute left-4 top-1/2 -translate-y-1/2 text-charcoal-900"></i>
-                                <input type="text" id="destCityInput" placeholder="Specific City (e.g. Manila, Tokyo)" class="w-full pl-11 pr-4 py-3.5 rounded-2xl text-charcoal-900 bg-white shadow-inner focus:outline-none focus:ring-2 focus:ring-terracotta-500 text-xs font-bold border border-stone-300">
+                                <input type="text" id="destCityInput" placeholder="Specific City / Places (e.g. Cebu, Kyoto, Paris Le Marais)" class="w-full pl-11 pr-4 py-3.5 rounded-2xl text-charcoal-900 bg-white shadow-inner focus:outline-none focus:ring-2 focus:ring-terracotta-500 text-xs font-bold border border-stone-300">
                             </div>
                         </div>
                         <button type="submit" class="w-full py-3.5 bg-terracotta-500 hover:bg-terracotta-600 active:scale-95 transition text-white font-bold rounded-2xl shadow-lg flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
@@ -150,21 +149,24 @@
                 </div>
             </div>
 
-            <!-- Recommended Cities -->
-            <div class="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm space-y-3">
+            <!-- Recommended Cities / Spots Suggested for Selected Country -->
+            <div id="suggestedCitiesCard" class="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm space-y-3">
                 <div class="flex items-center justify-between">
                     <h3 class="text-sm font-black text-black flex items-center gap-2">
                         <i class="fa-solid fa-compass-drafting text-terracotta-500"></i>
-                        <span>Recommended Cities in <span id="suggestedCountryName" class="text-terracotta-500">Philippines</span></span>
+                        <span>Recommended Cities & Places to Visit in <span id="suggestedCountryName" class="text-terracotta-500">Philippines</span></span>
                     </h3>
-                    <span class="text-[10px] font-extrabold uppercase bg-stone-100 text-charcoal-800 px-3 py-1 rounded-full border border-stone-200">Tap to Switch</span>
+                    <span class="text-[10px] font-extrabold uppercase bg-stone-100 text-charcoal-800 px-3 py-1 rounded-full border border-stone-200">Tap to Quick Switch</span>
                 </div>
-                <div id="suggestedCitiesContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+                <div id="suggestedCitiesContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <!-- Injected via JS -->
+                </div>
             </div>
 
             <!-- Weather Details Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-1 bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+                <!-- Main Weather Card -->
+                <div class="lg:col-span-1 bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
                     <div>
                         <div class="flex justify-between items-start mb-4">
                             <div>
@@ -173,11 +175,13 @@
                             </div>
                             <span id="weatherIcon" class="text-4xl text-terracotta-500"><i class="fa-solid fa-sun"></i></span>
                         </div>
+                        
                         <div class="my-6 flex items-baseline gap-3">
                             <span id="weatherTemp" class="text-5xl font-extrabold text-black">31°</span>
                             <span id="weatherCondition" class="text-sm font-extrabold text-charcoal-900 bg-sand-500/20 px-3 py-1 rounded-full border border-sand-500/30">Warm & Tropical</span>
                         </div>
                     </div>
+
                     <div class="grid grid-cols-4 gap-2 pt-4 border-t border-stone-200 text-center">
                         <div class="bg-stone-100 p-2.5 rounded-2xl border border-stone-200">
                             <i class="fa-solid fa-droplet text-terracotta-500 text-xs mb-1"></i>
@@ -202,66 +206,77 @@
                     </div>
                 </div>
 
-                <div class="lg:col-span-2 bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+                <!-- 5-Day Forecast -->
+                <div class="lg:col-span-2 bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
                     <div class="flex items-center justify-between mb-4">
                         <h4 class="font-extrabold text-black text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-calendar-week text-olive-600"></i> 5-Day Trip Forecast
+                            <i class="fa-solid fa-calendar-week text-olive-600"></i>
+                            5-Day Trip Forecast
                         </h4>
                         <span class="text-[10px] text-charcoal-900 bg-olive-500/15 border border-olive-500/30 px-3 py-1 rounded-full font-extrabold uppercase tracking-wider">Synced Live</span>
                     </div>
-                    <div id="forecastContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-3"></div>
+
+                    <div id="forecastContainer" class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <!-- Forecast items -->
+                    </div>
+
+                    <!-- Quick Travel Packing Advice -->
                     <div class="mt-4 p-4 rounded-2xl bg-stone-100 border border-stone-200 flex items-start gap-3">
                         <i class="fa-solid fa-compass text-terracotta-500 text-lg mt-0.5 shrink-0"></i>
-                        <p id="packingAdvice" class="text-xs text-black font-semibold leading-relaxed">Pack lightweight breathable linen tops, cotton tees, and UV sunglasses.</p>
+                        <p id="packingAdvice" class="text-xs text-black font-semibold leading-relaxed">
+                            Warm tropical weather ahead. Pack lightweight breathable linen tops, cotton tees, UV sunglasses, and easy walking sneakers.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 2: ITINERARY PLANNER WITH ROTATING BIBLE VERSES & CLUSTERED SPOTS -->
+        <!-- TAB 2: ITINERARY PLANNER -->
         <section id="tab-itinerary" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-2xl font-black text-black flex items-center gap-2">
-                        <span>Clustered Itinerary Planner</span>
+                        <span>Itinerary Planner</span>
                         <span id="itineraryDestBadge" class="text-xs bg-terracotta-500 text-white font-extrabold px-3 py-1 rounded-full shadow-xs">Manila, Philippines</span>
                     </h2>
-                    <p class="text-xs font-bold text-charcoal-800 mt-1">Magkakalapit na tourist spots (optimized walking and transit clusters)</p>
+                    <p class="text-xs font-bold text-charcoal-800 mt-1">Organize your daily activities, sights, meals, and stays with instant category tagging</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button onclick="autoSuggestClusterPlan()" class="px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-black font-extrabold rounded-2xl border border-stone-300 text-xs transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-wand-magic-sparkles text-terracotta-500"></i> Suggest Clustered Plan
+                    <button onclick="addItineraryDay()" class="px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-black font-extrabold rounded-2xl border border-stone-300 text-xs transition flex items-center gap-1">
+                        <i class="fa-solid fa-calendar-plus text-terracotta-500"></i> + Add Day
                     </button>
                     <button onclick="openItineraryModal()" class="px-5 py-2.5 bg-charcoal-900 hover:bg-black active:scale-95 transition text-white font-extrabold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider shrink-0">
-                        <i class="fa-solid fa-plus-circle text-sand-500 text-sm"></i> <span>+ Add Activity</span>
+                        <i class="fa-solid fa-plus-circle text-sand-500 text-sm"></i>
+                        <span>+ Add Activity</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Dynamic Rotating Bible Verse Card -->
+            <!-- Gentle & Encouraging Daily Purpose Bible Verse Card -->
             <div class="bg-stone-100/90 border border-stone-200 rounded-2xl p-4 flex items-center gap-3.5 shadow-xs">
                 <div class="w-10 h-10 rounded-xl bg-charcoal-900 text-sand-500 flex items-center justify-center text-base shrink-0 shadow-xs">
                     <i class="fa-solid fa-feather-pointed"></i>
                 </div>
                 <div class="flex-1">
-                    <p id="rotatingVerseText" class="text-xs font-bold text-black italic leading-snug">"Commit to the Lord whatever you do, and your plans will succeed."</p>
-                    <p id="rotatingVerseRef" class="text-[10px] font-black text-charcoal-800 uppercase tracking-widest mt-1">— Proverbs 16:3 • Daily Traveling Grace</p>
+                    <p class="text-xs font-bold text-black italic leading-snug">"Commit to the Lord whatever you do, and your plans will succeed. In their hearts humans plan their course, but the Lord establishes their steps."</p>
+                    <p class="text-[10px] font-black text-charcoal-800 uppercase tracking-widest mt-1">— Proverbs 16:3, 9 • Purpose in Every Journey</p>
                 </div>
-                <button onclick="rotateBibleVerse()" class="px-3 py-1.5 bg-white hover:bg-stone-200 text-black font-extrabold rounded-xl text-[10px] border border-stone-300 transition">
-                    <i class="fa-solid fa-rotate"></i> Another Verse
-                </button>
             </div>
 
-            <!-- Day Navigation -->
+            <!-- Day Tabs Nav with Add/Remove Day controls -->
             <div class="flex items-center justify-between gap-2 bg-stone-100 p-2 rounded-2xl border border-stone-200">
-                <div id="itineraryDaysNav" class="flex gap-2 overflow-x-auto no-scrollbar py-1"></div>
-                <button onclick="addItineraryDay()" class="px-3.5 py-2 bg-stone-200 hover:bg-stone-300 text-black font-extrabold rounded-xl text-xs shrink-0 transition flex items-center gap-1">
-                    <i class="fa-solid fa-plus"></i> Add Day
+                <div id="itineraryDaysNav" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+                    <!-- Populated via JS -->
+                </div>
+                <button onclick="removeItineraryDay()" title="Remove current selected day" class="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 font-extrabold rounded-xl text-xs border border-red-200 shrink-0 transition flex items-center gap-1">
+                    <i class="fa-solid fa-trash-can"></i> Remove Day
                 </button>
             </div>
 
             <!-- Activity List Container -->
-            <div id="itineraryList" class="space-y-4"></div>
+            <div id="itineraryList" class="space-y-4">
+                <!-- Populated via JS -->
+            </div>
         </section>
 
         <!-- TAB 3: ROAD & SITE NAVIGATION -->
@@ -275,23 +290,27 @@
                     <p class="text-xs font-bold text-charcoal-800">Calculate routes, road conditions, and landmarks in your destination</p>
                 </div>
                 <button onclick="calculateCurrentRoute()" class="px-4 py-2.5 bg-charcoal-900 hover:bg-black active:scale-95 transition text-white font-extrabold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider">
-                    <i class="fa-solid fa-route text-sand-500"></i> <span>Recalculate Route</span>
+                    <i class="fa-solid fa-route text-sand-500"></i>
+                    <span>Recalculate Route</span>
                 </button>
             </div>
 
+            <!-- Route Inputs Bar -->
             <div class="bg-white rounded-3xl p-5 border border-stone-200 shadow-sm grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                 <div class="md:col-span-5 relative">
-                    <label class="block text-[10px] uppercase font-black text-black mb-1 tracking-wider">Starting Location</label>
+                    <label class="block text-[10px] uppercase font-black text-black mb-1 tracking-wider">Starting Location / Arrival Desk</label>
                     <div class="relative">
                         <i class="fa-solid fa-circle-dot absolute left-3.5 top-1/2 -translate-y-1/2 text-olive-600 text-xs"></i>
                         <input type="text" id="routeStartInput" value="Ninoy Aquino International (NAIA)" class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-stone-300 text-xs font-extrabold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50">
                     </div>
                 </div>
+
                 <div class="hidden md:flex md:col-span-1 justify-center items-center pt-4">
                     <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-charcoal-900 border border-stone-300">
                         <i class="fa-solid fa-arrow-right-long text-xs"></i>
                     </div>
                 </div>
+
                 <div class="md:col-span-4 relative">
                     <label class="block text-[10px] uppercase font-black text-black mb-1 tracking-wider">Site Destination Landmark</label>
                     <div class="relative">
@@ -299,41 +318,54 @@
                         <input type="text" id="routeEndInput" value="BGC Bonifacio High Street & Makati" class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-stone-300 text-xs font-extrabold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50">
                     </div>
                 </div>
+
                 <div class="md:col-span-2 pt-2 md:pt-4">
                     <button onclick="calculateCurrentRoute()" class="w-full py-2.5 bg-terracotta-500 hover:bg-terracotta-600 text-white rounded-xl font-bold text-xs transition shadow-xs flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-magnifying-glass-location"></i> <span>Find Route</span>
+                        <i class="fa-solid fa-magnifying-glass-location"></i>
+                        <span>Find Route</span>
                     </button>
                 </div>
             </div>
 
+            <!-- Road Info & Interactive Map Display -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Visual Simulated Map Box -->
                 <div class="lg:col-span-7 bg-charcoal-900 text-canvas rounded-3xl p-6 shadow-xl relative overflow-hidden min-h-[340px] flex flex-col justify-between border border-stone-800">
                     <div id="routeMapBg" class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-30"></div>
+                    
                     <div class="relative z-10 flex justify-between items-start">
                         <span class="px-3 py-1 rounded-full bg-stone-900/90 backdrop-blur-md text-[10px] uppercase font-black tracking-widest text-sand-500 border border-stone-700">Live Navigation Simulation</span>
                         <span id="routeTrafficBadge" class="px-3 py-1 rounded-full bg-olive-600/90 backdrop-blur-md text-[10px] font-extrabold text-white uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-circle text-[6px]"></i> Moderate Road Traffic
                         </span>
                     </div>
+
                     <div class="relative z-10 my-8">
                         <div class="flex items-center gap-3 mb-2">
                             <i class="fa-solid fa-road text-terracotta-500 text-xl"></i>
                             <h3 id="routeTitleDisplay" class="text-xl sm:text-2xl font-black text-white">NAIA Terminal → BGC High Street</h3>
                         </div>
-                        <p id="routeDistanceDisplay" class="text-xs text-stone-200 font-bold">Distance: ~12.4 km</p>
+                        <p id="routeDistanceDisplay" class="text-xs text-stone-200 font-bold">Distance: ~12.4 km in Manila</p>
                     </div>
+
                     <div class="relative z-10 flex flex-wrap gap-2 pt-4 border-t border-stone-800">
                         <button onclick="openExternalMaps()" class="px-3.5 py-2 bg-white text-black rounded-xl text-xs font-black hover:bg-stone-100 transition flex items-center gap-1.5">
                             <i class="fa-solid fa-location-arrow text-terracotta-500"></i> Open in Google Maps
                         </button>
+                        <button onclick="copyRouteDetails()" class="px-3.5 py-2 bg-stone-800 text-stone-200 rounded-xl text-xs font-extrabold hover:text-white border border-stone-700 transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-copy"></i> Copy Directions
+                        </button>
                     </div>
                 </div>
 
+                <!-- Turn-by-Turn & Metrics -->
                 <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between space-y-4">
                     <div>
                         <h3 class="font-black text-black text-xs tracking-wider uppercase mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-diamond-turn-right text-terracotta-500"></i> Road Conditions & Directions
+                            <i class="fa-solid fa-diamond-turn-right text-terracotta-500"></i>
+                            Road Conditions & Directions
                         </h3>
+
                         <div class="grid grid-cols-2 gap-3 mb-4">
                             <div class="bg-stone-100 p-3 rounded-2xl border border-stone-200">
                                 <p class="text-[9px] text-charcoal-800 uppercase font-black">Est. Travel Time</p>
@@ -344,13 +376,16 @@
                                 <p id="routeTollEst" class="text-base font-black text-black">₱120 PHP</p>
                             </div>
                         </div>
-                        <div class="space-y-3" id="turnByTurnList"></div>
+
+                        <div class="space-y-3" id="turnByTurnList">
+                            <!-- Injected JS -->
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 4: RENT CAR & GRAB PICK-UP WITH DRIVER REGISTRATION -->
+        <!-- TAB 4: RENT CAR & GRAB PICK-UP -->
         <section id="tab-transit" class="tab-content hidden space-y-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
@@ -358,11 +393,32 @@
                         <span>Rent Car & Grab Pick-Up</span>
                         <span id="transitDestBadge" class="text-xs bg-olive-500/15 text-olive-700 font-extrabold px-3 py-1 rounded-full border border-olive-500/30">Philippines</span>
                     </h2>
-                    <p class="text-xs font-bold text-charcoal-800">Book rides synced with your account payment method (<span id="transitCurrencyLabel" class="font-black text-black">₱ PHP</span>)</p>
+                    <p class="text-xs font-bold text-charcoal-800">Book ride-hailing drivers or rent vehicles with verified local drivers & local payments (<span id="transitCurrencyLabel" class="font-black text-black">₱ PHP</span>)</p>
                 </div>
-                <button onclick="openDriverRegisterModal()" class="px-4 py-2.5 bg-olive-600 hover:bg-olive-700 text-white rounded-2xl text-xs font-extrabold transition shadow-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-id-card"></i> Register as Driver / Rider
-                </button>
+                <span class="inline-flex items-center gap-1 px-3 py-1 bg-olive-500/15 text-olive-700 rounded-full text-xs font-extrabold border border-olive-500/30">
+                    <i class="fa-solid fa-shield-halved"></i> Registered Regional Drivers
+                </span>
+            </div>
+
+            <!-- Live Ride Status Banner (Simulated) -->
+            <div id="rideStatusCard" class="bg-charcoal-900 text-canvas rounded-3xl p-5 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4 border border-stone-800">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-terracotta-500 text-white flex items-center justify-center text-xl shadow-md shrink-0">
+                        <i class="fa-solid fa-car-side"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-0.5">
+                            <span class="text-[9px] uppercase tracking-widest font-black text-sand-500">Current Booking Status</span>
+                            <span id="registeredDriverBadge" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[9px] font-extrabold border border-emerald-500/30"><i class="fa-solid fa-circle-check text-[8px]"></i> Registered Local Driver</span>
+                        </div>
+                        <h4 id="rideStatusText" class="text-sm font-black text-white">Executive Chauffeur • Confirmed</h4>
+                        <p id="driverDetails" class="text-xs font-semibold text-stone-200">Driver: Mateo S. (Toyota Vios • Plate: NQR-8821) • Rating: 4.98★</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <span id="rideETA" class="px-3.5 py-2 bg-stone-800 rounded-xl text-xs font-extrabold text-white border border-stone-700">ETA: 4 Mins</span>
+                    <button onclick="cancelRideSim()" class="px-3.5 py-2 bg-red-500/20 text-red-300 hover:bg-red-500/30 rounded-xl text-xs font-extrabold transition">Cancel</button>
+                </div>
             </div>
 
             <!-- Booking Options Grid -->
@@ -371,11 +427,13 @@
                 <div class="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm space-y-4">
                     <div class="flex justify-between items-center border-b border-stone-200 pb-3">
                         <h3 class="font-black text-black text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-taxi text-terracotta-500"></i> Instant Pick-Up & Ride-Hailing
+                            <i class="fa-solid fa-taxi text-terracotta-500"></i>
+                            Instant Pick-Up & Ride-Hailing
                         </h3>
                         <span class="text-[10px] uppercase tracking-wider font-extrabold text-charcoal-800">On-Demand</span>
                     </div>
 
+                    <!-- Local Driver Detection Info Card -->
                     <div class="p-3 bg-stone-100 rounded-2xl border border-stone-200 flex items-center gap-3">
                         <img id="detectedDriverAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="w-10 h-10 rounded-full object-cover border border-stone-300">
                         <div class="flex-1">
@@ -383,14 +441,16 @@
                                 <h5 id="detectedDriverName" class="text-xs font-black text-black">Mateo Santos</h5>
                                 <span id="detectedDriverRating" class="text-[10px] font-extrabold bg-amber-500/20 text-amber-800 px-2 py-0.5 rounded-full">4.98 ★</span>
                             </div>
-                            <p id="detectedDriverMeta" class="text-[10px] font-bold text-charcoal-800">Registered Driver • Toyota Vios (NQR-8821)</p>
+                            <p id="detectedDriverMeta" class="text-[10px] font-bold text-charcoal-800">Registered Grab Driver in Manila • Toyota Vios (NQR-8821)</p>
                         </div>
                     </div>
 
                     <div class="space-y-3">
                         <div>
                             <label class="block text-[10px] font-black text-black uppercase mb-1">Pick-up Point</label>
-                            <select id="grabPickupSelect" class="w-full p-2.5 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black"></select>
+                            <select id="grabPickupSelect" class="w-full p-2.5 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black">
+                                <!-- Populated dynamically -->
+                            </select>
                         </div>
                         <div>
                             <label class="block text-[10px] font-black text-black uppercase mb-1">Drop-off Point</label>
@@ -399,17 +459,21 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-[10px] font-black text-black uppercase">Select Ride Tier</label>
-                        <div id="rideTiersContainer" class="space-y-2"></div>
+                        <label class="block text-[10px] font-black text-black uppercase">Select Ride Tier (<span class="currency-label-span font-black">PHP</span>)</label>
+                        <div id="rideTiersContainer" class="space-y-2">
+                            <!-- Populated dynamically -->
+                        </div>
                     </div>
 
-                    <!-- Connected Payment Display -->
-                    <div class="pt-2 border-t border-stone-200 flex items-center justify-between bg-stone-50 p-3 rounded-xl border border-stone-200">
-                        <div>
-                            <p class="text-[9px] uppercase font-black text-stone-500">Connected Account Payment</p>
-                            <p id="connectedPaymentDisplay" class="text-xs font-black text-black">GCash Wallet (Linked)</p>
-                        </div>
-                        <button onclick="openAuthModal('login')" class="text-[10px] text-terracotta-600 font-extrabold underline">Change</button>
+                    <!-- Payment Method Selector -->
+                    <div class="pt-2 border-t border-stone-200 space-y-2">
+                        <label class="block text-[10px] font-black text-black uppercase flex items-center justify-between">
+                            <span>Payment Method</span>
+                            <span class="text-terracotta-500 font-extrabold text-[9px]">Localized Options</span>
+                        </label>
+                        <select id="grabPaymentMethodSelect" class="w-full p-2.5 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black">
+                            <!-- Populated dynamically per country (GCash, PayMaya, GrabPay, Apple Pay, Suica, etc.) -->
+                        </select>
                     </div>
 
                     <button onclick="bookGrabRide()" class="w-full py-3 bg-charcoal-900 hover:bg-black text-white rounded-2xl font-extrabold text-xs transition shadow-md flex items-center justify-center gap-2 uppercase tracking-wider">
@@ -421,7 +485,8 @@
                 <div class="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm space-y-4">
                     <div class="flex justify-between items-center border-b border-stone-200 pb-3">
                         <h3 class="font-black text-black text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-key text-olive-600"></i> Car Rental & Chauffeur Services
+                            <i class="fa-solid fa-key text-olive-600"></i>
+                            Car Rental & Driver Services
                         </h3>
                         <span class="text-[10px] uppercase tracking-wider font-extrabold text-charcoal-800">Daily Rates</span>
                     </div>
@@ -438,7 +503,9 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-black text-black uppercase mb-1">Pick-Up Hub</label>
-                            <select id="rentalPickupLocation" class="w-full p-2.5 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black"></select>
+                            <select id="rentalPickupLocation" class="w-full p-2.5 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black">
+                                <!-- Populated dynamically -->
+                            </select>
                         </div>
                     </div>
 
@@ -463,12 +530,20 @@
                         </div>
                     </div>
 
+                    <!-- Payment Method Selector Rental -->
+                    <div class="pt-1 space-y-2">
+                        <label class="block text-[10px] font-black text-black uppercase">Rental Payment Option</label>
+                        <select id="rentalPaymentMethodSelect" class="w-full p-2.5 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+
                     <div class="bg-stone-100 border border-stone-200 rounded-2xl p-3.5 flex justify-between items-center">
                         <div>
                             <p class="text-[10px] uppercase font-black text-charcoal-800">Estimated Total Cost</p>
                             <p id="rentalTotalDisplay" class="text-lg font-black text-black">₱9,300 PHP</p>
                         </div>
-                        <span class="text-[10px] text-olive-700 bg-olive-500/15 border border-olive-500/30 px-2.5 py-1 rounded-full font-extrabold">Tax & Insurance Included</span>
+                        <span class="text-[10px] text-olive-700 bg-olive-500/15 border border-olive-500/30 px-2.5 py-1 rounded-full font-extrabold">Insurance & Local Tax Included</span>
                     </div>
 
                     <button onclick="reserveCarRental()" class="w-full py-3 bg-terracotta-500 hover:bg-terracotta-600 text-white rounded-2xl font-extrabold text-xs transition shadow-md flex items-center justify-center gap-2 uppercase tracking-wider">
@@ -483,19 +558,22 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-2xl font-black text-black">Capsule Wardrobe</h2>
-                    <p class="text-xs font-bold text-charcoal-800">Snap photos of your clothes to get AI best-match outfit recommendations</p>
+                    <p class="text-xs font-bold text-charcoal-800">Snap photos of your clothes or pick from versatile unisex defaults</p>
                 </div>
+                
                 <div class="flex gap-2">
                     <button onclick="loadUnisexPresets()" class="px-3.5 py-2.5 bg-stone-100 hover:bg-stone-200 text-black font-extrabold rounded-2xl text-xs transition border border-stone-300">
                         <i class="fa-solid fa-rotate-left mr-1 text-terracotta-500"></i> Reset Presets
                     </button>
                     <label class="cursor-pointer px-4 py-2.5 bg-charcoal-900 hover:bg-black active:scale-95 transition text-white font-extrabold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider">
-                        <i class="fa-solid fa-camera text-sand-500"></i> <span>Upload Clothes Photo</span>
+                        <i class="fa-solid fa-camera text-sand-500"></i>
+                        <span>Upload Photo</span>
                         <input type="file" id="wardrobeFileInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageUpload(event)">
                     </label>
                 </div>
             </div>
 
+            <!-- Wardrobe Category Selector Filter -->
             <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
                 <button onclick="filterWardrobe('all')" class="wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-extrabold bg-charcoal-900 text-white shadow-sm" data-cat="all">All Items</button>
                 <button onclick="filterWardrobe('top')" class="wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-extrabold bg-white text-black border border-stone-300 hover:bg-stone-100" data-cat="top">Tops</button>
@@ -505,15 +583,1554 @@
                 <button onclick="filterWardrobe('accessory')" class="wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-extrabold bg-white text-black border border-stone-300 hover:bg-stone-100" data-cat="accessory">Accessories</button>
             </div>
 
-            <div id="wardrobeGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+            <!-- Grid Display -->
+            <div id="wardrobeGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <!-- Wardrobe cards injected here -->
+            </div>
         </section>
 
-        <!-- TAB 6: SMART OUTFIT GENERATOR WITH AI BEST-MATCH STYLING -->
+        <!-- TAB 6: SMART OUTFIT GENERATOR -->
         <section id="tab-outfit" class="tab-content hidden space-y-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-2xl font-black text-black">AI Best-Match Outfit Studio</h2>
-                    <p class="text-xs font-bold text-charcoal-800">Automatically coordinates your clothes for <span id="outfitDestWeatherLabel" class="font-black text-terracotta-500">Manila's Weather</span></p>
+                    <h2 class="text-2xl font-black text-black">Outfit Studio & Weather Matching</h2>
+                    <p class="text-xs font-bold text-charcoal-800">Build looks suited for <span id="outfitDestWeatherLabel" class="font-black text-terracotta-500">Manila's Weather</span></p>
                 </div>
+
                 <div class="flex flex-wrap gap-2">
-                    <label class="cursor-pointer px-4 py-2.5 bg
+                    <label class="cursor-pointer px-4 py-2.5 bg-charcoal-900 hover:bg-black active:scale-95 transition text-white font-extrabold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider">
+                        <i class="fa-solid fa-camera text-sand-500"></i>
+                        <span>Snap Clothing</span>
+                        <input type="file" id="outfitDirectCaptureInput" accept="image/*" capture="environment" class="hidden" onchange="handleDirectOutfitCapture(event)">
+                    </label>
+
+                    <button onclick="autoGenerateOutfit()" class="px-5 py-2.5 bg-terracotta-500 hover:bg-terracotta-600 active:scale-95 transition text-white font-extrabold rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs tracking-wider">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Generate Weather Outfit</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Weather Adaptation Match Bar -->
+            <div id="weatherOutfitMatchBanner" class="bg-stone-100 border border-stone-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-charcoal-900 text-white flex items-center justify-center text-lg shadow-xs">
+                        <i class="fa-solid fa-temperature-half text-sand-500"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-black text-black">Target Destination Weather: <span id="outfitTargetWeatherText">Warm & Tropical (31°)</span></h4>
+                        <p id="outfitWeatherTip" class="text-[11px] font-bold text-charcoal-800">Matching lightweight tops with comfortable bottoms and shoes.</p>
+                    </div>
+                </div>
+                <span id="outfitMatchScore" class="px-3 py-1 rounded-full bg-olive-500/15 border border-olive-500/30 text-olive-700 text-xs font-black flex items-center gap-1.5 self-end sm:self-center">
+                    <i class="fa-solid fa-shield-check"></i> 98% Weather Compatible
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Visual Canvas Area -->
+                <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col items-center justify-between">
+                    <div class="w-full flex justify-between items-center mb-4">
+                        <h3 class="font-black text-black text-xs tracking-wider uppercase flex items-center gap-2">
+                            <i class="fa-solid fa-shirt text-olive-600"></i>
+                            Outfit Canvas
+                        </h3>
+                        <button onclick="clearCanvas()" class="text-xs font-black text-terracotta-500 hover:underline">Reset Canvas</button>
+                    </div>
+
+                    <!-- Canvas Layer slots -->
+                    <div class="w-full max-w-md bg-stone-50 rounded-2xl p-4 border border-dashed border-stone-300 space-y-3 min-h-[360px] flex flex-col justify-center">
+                        <div id="slot-outerwear" class="outfit-slot min-h-[70px] bg-white rounded-xl border border-stone-200 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                            <span class="text-xs text-charcoal-800 uppercase font-black tracking-widest text-[10px]">Outerwear Layer</span>
+                        </div>
+                        <div id="slot-top" class="outfit-slot min-h-[85px] bg-white rounded-xl border border-stone-200 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                            <span class="text-xs text-charcoal-800 uppercase font-black tracking-widest text-[10px]">Top Layer</span>
+                        </div>
+                        <div id="slot-bottom" class="outfit-slot min-h-[85px] bg-white rounded-xl border border-stone-200 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                            <span class="text-xs text-charcoal-800 uppercase font-black tracking-widest text-[10px]">Bottom Layer</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div id="slot-shoes" class="outfit-slot min-h-[65px] bg-white rounded-xl border border-stone-200 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                                <span class="text-xs text-charcoal-800 uppercase font-black tracking-widest text-[10px]">Shoes</span>
+                            </div>
+                            <div id="slot-accessory" class="outfit-slot min-h-[65px] bg-white rounded-xl border border-stone-200 flex items-center justify-center relative p-2 overflow-hidden shadow-xs">
+                                <span class="text-xs text-charcoal-800 uppercase font-black tracking-widest text-[10px]">Accessory</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save Outfit Action -->
+                    <div class="w-full mt-6 flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="outfitNameInput" placeholder="Outfit Title (e.g., Manila Summer Look)" class="flex-1 px-4 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-black focus:ring-2 focus:ring-charcoal-900 focus:outline-none bg-stone-50">
+                        <button onclick="saveCurrentOutfit()" class="px-5 py-2.5 bg-charcoal-900 hover:bg-black text-white rounded-xl font-extrabold text-xs transition shadow-md tracking-wider">
+                            Save Outfit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Wardrobe Picker Sidebar -->
+                <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col">
+                    <h3 class="font-black text-black text-xs tracking-wider uppercase mb-3">Tap item to equip</h3>
+                    <div class="flex gap-1 bg-stone-100 p-1 rounded-xl mb-4 overflow-x-auto no-scrollbar border border-stone-200">
+                        <button onclick="switchPickerCategory('top')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-black rounded-lg bg-white shadow-xs text-black" data-cat="top">Tops</button>
+                        <button onclick="switchPickerCategory('bottom')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-black rounded-lg text-charcoal-800 hover:text-black" data-cat="bottom">Bottoms</button>
+                        <button onclick="switchPickerCategory('outerwear')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-black rounded-lg text-charcoal-800 hover:text-black" data-cat="outerwear">Outer</button>
+                        <button onclick="switchPickerCategory('shoes')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-black rounded-lg text-charcoal-800 hover:text-black" data-cat="shoes">Shoes</button>
+                        <button onclick="switchPickerCategory('accessory')" class="picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-black rounded-lg text-charcoal-800 hover:text-black" data-cat="accessory">Accs</button>
+                    </div>
+
+                    <div id="pickerItemsGrid" class="grid grid-cols-3 gap-2 overflow-y-auto max-h-[350px] pr-1">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved Outfits Collection -->
+            <div class="pt-6 border-t border-stone-200">
+                <h3 class="text-lg font-black text-black mb-4">Saved Lookbook</h3>
+                <div id="savedOutfitsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation Bar for Mobile -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-canvas/95 backdrop-blur-md border-t border-stone-200 md:hidden">
+        <div class="grid grid-cols-5 h-16">
+            <button onclick="switchTab('destination')" class="nav-tab-btn flex flex-col items-center justify-center text-black font-extrabold" data-tab="destination">
+                <i class="fa-solid fa-compass text-base"></i>
+                <span class="text-[9px] tracking-wider mt-0.5">Explore</span>
+            </button>
+            <button onclick="switchTab('itinerary')" class="nav-tab-btn flex flex-col items-center justify-center text-charcoal-800 hover:text-black font-extrabold" data-tab="itinerary">
+                <i class="fa-solid fa-calendar-day text-base"></i>
+                <span class="text-[9px] tracking-wider mt-0.5">Plan</span>
+            </button>
+            <button onclick="switchTab('navigation')" class="nav-tab-btn flex flex-col items-center justify-center text-charcoal-800 hover:text-black font-extrabold" data-tab="navigation">
+                <i class="fa-solid fa-route text-base"></i>
+                <span class="text-[9px] tracking-wider mt-0.5">Road</span>
+            </button>
+            <button onclick="switchTab('transit')" class="nav-tab-btn flex flex-col items-center justify-center text-charcoal-800 hover:text-black font-extrabold" data-tab="transit">
+                <i class="fa-solid fa-taxi text-base"></i>
+                <span class="text-[9px] tracking-wider mt-0.5">Rent/Grab</span>
+            </button>
+            <button onclick="switchTab('outfit')" class="nav-tab-btn flex flex-col items-center justify-center text-charcoal-800 hover:text-black font-extrabold" data-tab="outfit">
+                <i class="fa-solid fa-wand-magic-sparkles text-base"></i>
+                <span class="text-[9px] tracking-wider mt-0.5">Outfits</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Desktop Floating Navigation Bar -->
+    <div class="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-charcoal-900/95 backdrop-blur-md text-white px-3 py-2 rounded-full shadow-2xl border border-stone-700/60 space-x-1">
+        <button onclick="switchTab('destination')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold bg-terracotta-500 text-white transition" data-tab="destination">
+            <i class="fa-solid fa-compass mr-1.5"></i> Destination
+        </button>
+        <button onclick="switchTab('itinerary')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition" data-tab="itinerary">
+            <i class="fa-solid fa-calendar-day mr-1.5"></i> Itinerary
+        </button>
+        <button onclick="switchTab('navigation')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition" data-tab="navigation">
+            <i class="fa-solid fa-route mr-1.5"></i> Road Tracker
+        </button>
+        <button onclick="switchTab('transit')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition" data-tab="transit">
+            <i class="fa-solid fa-taxi mr-1.5"></i> Rent & Grab
+        </button>
+        <button onclick="switchTab('wardrobe')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition" data-tab="wardrobe">
+            <i class="fa-solid fa-shirt mr-1.5"></i> Closet
+        </button>
+        <button onclick="switchTab('outfit')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition" data-tab="outfit">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Outfit Studio
+        </button>
+    </div>
+
+    <!-- ACCOUNT AUTHENTICATION & PRIVACY POLICY MODAL -->
+    <div id="authModal" class="fixed inset-0 z-50 bg-charcoal-900/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-stone-200 transform transition-all space-y-5 relative">
+            <div class="flex items-center justify-between border-b border-stone-200 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-charcoal-900 text-white flex items-center justify-center text-lg shadow-sm">
+                        <i class="fa-solid fa-user-lock text-sand-500"></i>
+                    </div>
+                    <div>
+                        <h3 id="authModalTitle" class="text-lg font-black text-black">Sign In to WanderStyle</h3>
+                        <p class="text-[11px] font-bold text-charcoal-800">Access synced trips, outfits & ride history</p>
+                    </div>
+                </div>
+                <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-black flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Auth Form Switcher Tabs -->
+            <div class="flex gap-2 bg-stone-100 p-1 rounded-xl border border-stone-200">
+                <button id="authTabLogin" onclick="switchAuthMode('login')" class="flex-1 py-2 text-xs font-black rounded-lg bg-white text-black shadow-xs">Sign In</button>
+                <button id="authTabRegister" onclick="switchAuthMode('register')" class="flex-1 py-2 text-xs font-black rounded-lg text-charcoal-800 hover:text-black">Register (Create ACC)</button>
+            </div>
+
+            <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div id="nameInputGroup" class="hidden">
+                    <label class="block text-[11px] font-extrabold text-black uppercase mb-1">Full Name *</label>
+                    <input type="text" id="authNameInput" placeholder="e.g. Maria Santos" class="w-full px-4 py-3 rounded-xl border border-stone-300 text-xs font-bold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-extrabold text-black uppercase mb-1">Email Address *</label>
+                    <input type="email" id="authEmailInput" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-stone-300 text-xs font-bold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-extrabold text-black uppercase mb-1">Password *</label>
+                    <input type="password" id="authPasswordInput" required placeholder="••••••••••••" class="w-full px-4 py-3 rounded-xl border border-stone-300 text-xs font-bold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50">
+                </div>
+
+                <!-- Terms & Privacy Agreement Checkbox -->
+                <div id="policyGroup" class="p-3 bg-stone-50 rounded-xl border border-stone-200 space-y-2 hidden">
+                    <div class="flex items-start gap-2.5">
+                        <input type="checkbox" id="policyCheckbox" class="mt-0.5 rounded border-stone-300 text-terracotta-500 focus:ring-terracotta-500">
+                        <label for="policyCheckbox" class="text-[11px] font-bold text-black leading-tight">
+                            I agree to the <a href="#" onclick="alert('WanderStyle User Policy: We prioritize your privacy and local security compliance across all travel transit & wardrobe bookings.'); return false;" class="text-terracotta-600 underline">Terms of Service & User Privacy Policy</a>.
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" id="authSubmitBtn" class="w-full py-3.5 bg-terracotta-500 hover:bg-terracotta-600 text-white font-extrabold rounded-xl text-xs transition shadow-md uppercase tracking-wider">
+                    Sign In to Account
+                </button>
+            </form>
+            <div id="signOutContainer" class="pt-2 border-t border-stone-200 hidden">
+                <button onclick="handleSignOut()" class="w-full py-2 bg-red-50 hover:bg-red-100 text-red-600 font-extrabold rounded-xl text-xs border border-red-200 transition">
+                    <i class="fa-solid fa-right-from-bracket mr-1.5"></i> Sign Out of Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER-FRIENDLY ADD / EDIT ACTIVITY MODAL -->
+    <div id="itineraryModal" class="fixed inset-0 z-50 bg-charcoal-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stone-200 transform transition-all space-y-5 relative">
+            <div class="flex items-center justify-between border-b border-stone-200 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-terracotta-500 text-white flex items-center justify-center text-lg shadow-sm">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                    </div>
+                    <div>
+                        <h3 id="modalTitle" class="text-lg font-black text-black">Add Trip Activity</h3>
+                        <p id="modalSub" class="text-[11px] font-bold text-charcoal-800">Day 1 Plan • Manila</p>
+                    </div>
+                </div>
+                <button onclick="closeItineraryModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-black flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <form id="activityForm" onsubmit="saveActivitySubmit(event)" class="space-y-4">
+                <input type="hidden" id="actEditId" value="">
+                
+                <div>
+                    <label class="block text-[11px] font-extrabold text-black uppercase mb-1">Activity Name / Landmark *</label>
+                    <input type="text" id="actTitleInput" required placeholder="e.g. Visit National Museum & Intramuros" class="w-full px-4 py-3 rounded-xl border border-stone-300 text-xs font-bold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-extrabold text-black uppercase mb-1">Category *</label>
+                        <select id="actCategoryInput" class="w-full px-3 py-3 rounded-xl border border-stone-300 text-xs font-bold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50">
+                            <option value="sightseeing">🏛️ Sightseeing</option>
+                            <option value="dining">🍽️ Food & Dining</option>
+                            <option value="transport">🚕 Transport / Transit</option>
+                            <option value="shopping">🛍️ Shopping / Market</option>
+                            <option value="hotel">🏨 Hotel & Stay</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-extrabold text-black uppercase mb-1">Time *</label>
+                        <input type="time" id="actTimeInput" required value="10:00" class="w-full px-3 py-3 rounded-xl border border-stone-300 text-xs font-bold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-extrabold text-black uppercase mb-1">Location / Address</label>
+                    <input type="text" id="actLocationInput" placeholder="e.g. Ermita, Manila" class="w-full px-4 py-3 rounded-xl border border-stone-300 text-xs font-bold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-extrabold text-black uppercase mb-1">Notes / Reminders (Optional)</label>
+                    <textarea id="actNotesInput" rows="2" placeholder="e.g. Bring camera, buy tickets online ahead of time..." class="w-full px-4 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-black focus:ring-2 focus:ring-terracotta-500 focus:outline-none bg-stone-50"></textarea>
+                </div>
+
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeItineraryModal()" class="flex-1 py-3 bg-stone-100 hover:bg-stone-200 text-black font-extrabold rounded-xl text-xs transition">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-terracotta-500 hover:bg-terracotta-600 text-white font-extrabold rounded-xl text-xs transition shadow-md">Save Activity</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-20 right-4 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 bg-charcoal-900 text-canvas px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 border border-stone-700 text-xs font-bold">
+        <i class="fa-solid fa-circle-check text-olive-500 text-base"></i>
+        <span id="toastMsg">Action completed successfully</span>
+    </div>
+
+    <script>
+        // --- DESTINATION PRESETS DATABASE ---
+        const DESTINATION_PRESETS = {
+            "philippines": {
+                name: "Manila, Philippines",
+                city: "Manila",
+                country: "Philippines",
+                heroImg: "https://images.unsplash.com/photo-1518509562880-c7f29bc8e84f?auto=format&fit=crop&w=1200&q=80",
+                routeStart: "Ninoy Aquino International (NAIA)",
+                routeEnd: "BGC Bonifacio High Street & Makati",
+                currencySymbol: "₱",
+                currencyCode: "PHP",
+                rateMultiplier: 56.5,
+                pickupHubs: ["NAIA Terminal 3 Arrival Desk", "BGC Central Hub", "Makati Greenbelt Station"],
+                dropoffDefault: "BGC Bonifacio High Street",
+                registeredDriver: {
+                    name: "Mateo Santos",
+                    vehicle: "Toyota Vios Sedan",
+                    plate: "NQR-8821",
+                    rating: "4.98 ★",
+                    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+                },
+                paymentMethods: [
+                    { id: "gcash", name: "GCash Wallet" },
+                    { id: "paymaya", name: "Maya / PayMaya" },
+                    { id: "grabpay", name: "GrabPay PH" },
+                    { id: "card", name: "Credit / Debit Card" },
+                    { id: "cash", name: "Cash on Arrival" }
+                ],
+                activities: [
+                    { time: "09:30", title: "Walk & Coffee at BGC High Street", category: "dining", location: "Taguig, Metro Manila" },
+                    { time: "14:00", title: "National Museum & Intramuros Tour", category: "sightseeing", location: "Manila City" },
+                    { time: "19:00", title: "Sunset Dinner at Poblacion", category: "dining", location: "Makati" }
+                ],
+                weather: { temp: 31, condition: "Warm & Tropical", humidity: "75%", rain: "20%", wind: "12 km/h", uv: "High (9)", type: "warm" }
+            },
+            "tokyo": {
+                name: "Tokyo, Japan",
+                city: "Tokyo",
+                country: "Japan",
+                heroImg: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1200&q=80",
+                routeStart: "Haneda Airport (HND)",
+                routeEnd: "Shibuya Crossing & Meiji Shrine",
+                currencySymbol: "¥",
+                currencyCode: "JPY",
+                rateMultiplier: 150,
+                pickupHubs: ["Haneda Airport Terminal 3 Desk", "Tokyo Station Central Desk", "Shinjuku Hotel Hub"],
+                dropoffDefault: "Shibuya District & Harajuku",
+                registeredDriver: {
+                    name: "Kenji Morimoto",
+                    vehicle: "Toyota Crown Sedan",
+                    plate: "TK-3019",
+                    rating: "4.99 ★",
+                    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
+                },
+                paymentMethods: [
+                    { id: "paypay", name: "PayPay Japan" },
+                    { id: "suica", name: "Suica / Pasmo IC Card" },
+                    { id: "linepay", name: "LINE Pay" },
+                    { id: "card", name: "Credit / Debit Card" }
+                ],
+                activities: [
+                    { time: "09:30", title: "Explore Meiji Shrine & Yoyogi Park", category: "sightseeing", location: "Shibuya, Tokyo" },
+                    { time: "14:00", title: "Shopping at Ginza Six", category: "shopping", location: "Ginza, Tokyo" },
+                    { time: "19:00", title: "Dinner & Izakaya Crawl", category: "dining", location: "Shinjuku, Tokyo" }
+                ],
+                weather: { temp: 21, condition: "Clear & Mild", humidity: "42%", rain: "5%", wind: "10 km/h", uv: "Moderate (5)", type: "warm" }
+            },
+            "paris": {
+                name: "Paris, France",
+                city: "Paris",
+                country: "France",
+                heroImg: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80",
+                routeStart: "Charles de Gaulle Airport (CDG)",
+                routeEnd: "Eiffel Tower & Louvre Museum",
+                currencySymbol: "€",
+                currencyCode: "EUR",
+                rateMultiplier: 0.92,
+                pickupHubs: ["CDG Airport Terminal 2E", "Gare du Nord Station", "Le Marais Hotel Concierge"],
+                dropoffDefault: "Eiffel Tower Plaza",
+                registeredDriver: {
+                    name: "Jean-Luc Picard",
+                    vehicle: "Peugeot 508 Executive",
+                    plate: "FR-771-PX",
+                    rating: "4.95 ★",
+                    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80"
+                },
+                paymentMethods: [
+                    { id: "applepay", name: "Apple Pay / Google Pay" },
+                    { id: "card", name: "Credit / Debit Card" },
+                    { id: "cash", name: "Cash (Euros)" }
+                ],
+                activities: [
+                    { time: "10:00", title: "Louvre Museum Art Tour", category: "sightseeing", location: "1st Arrondissement" },
+                    { time: "14:30", title: "Stroll Along the Seine", category: "sightseeing", location: "Central Paris" },
+                    { time: "20:00", title: "Dinner at Bistro Le Marais", category: "dining", location: "4th Arrondissement" }
+                ],
+                weather: { temp: 16, condition: "Cool & Breezy", humidity: "65%", rain: "25%", wind: "14 km/h", uv: "Low (3)", type: "cold" }
+            }
+        };
+
+        const CATEGORY_META = {
+            sightseeing: { label: "Sightseeing", icon: "fa-landmark", bg: "bg-amber-50 text-amber-800 border-amber-200" },
+            dining: { label: "Dining", icon: "fa-utensils", bg: "bg-terracotta-500/10 text-terracotta-600 border-terracotta-500/20" },
+            transport: { label: "Transit", icon: "fa-taxi", bg: "bg-olive-500/10 text-olive-700 border-olive-500/20" },
+            shopping: { label: "Shopping", icon: "fa-bag-shopping", bg: "bg-purple-50 text-purple-800 border-purple-200" },
+            hotel: { label: "Hotel", icon: "fa-bed", bg: "bg-blue-50 text-blue-800 border-blue-200" }
+        };
+
+        // --- COUNTRY SUGGESTION DATABASE ---
+        const COUNTRY_RECOMMENDATIONS = {
+            "philippines": [
+                { city: "Manila", spot: "Intramuros & BGC", img: "https://images.unsplash.com/photo-1518509562880-c7f29bc8e84f?auto=format&fit=crop&w=300&q=80" },
+                { city: "Cebu", spot: "Kawasan Falls & Magellan Cross", img: "https://images.unsplash.com/photo-1518509562880-c7f29bc8e84f?auto=format&fit=crop&w=300&q=80" },
+                { city: "El Nido, Palawan", spot: "Nacpan Beach & Lagoons", img: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=300&q=80" },
+                { city: "Boracay", spot: "White Beach & D'Mall", img: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=300&q=80" }
+            ],
+            "japan": [
+                { city: "Tokyo", spot: "Shibuya & Senso-ji", img: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=300&q=80" },
+                { city: "Kyoto", spot: "Fushimi Inari & Arashiyama", img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=300&q=80" },
+                { city: "Osaka", spot: "Dotonbori & Osaka Castle", img: "https://images.unsplash.com/photo-1590559899731-a382839e5549?auto=format&fit=crop&w=300&q=80" },
+                { city: "Hokkaido", spot: "Sapporo Snow & Otaru", img: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=300&q=80" }
+            ],
+            "france": [
+                { city: "Paris", spot: "Eiffel Tower & Le Marais", img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=300&q=80" },
+                { city: "Nice", spot: "Promenade des Anglais", img: "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=300&q=80" },
+                { city: "Lyon", spot: "Vieux Lyon & Culinary", img: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=300&q=80" },
+                { city: "Bordeaux", spot: "Wine Region & Water Mirror", img: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=300&q=80" }
+            ],
+            "united states": [
+                { city: "New York", spot: "Central Park & Manhattan", img: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=300&q=80" },
+                { city: "Los Angeles", spot: "Santa Monica & Hollywood", img: "https://images.unsplash.com/photo-1580655653885-65763b2597d0?auto=format&fit=crop&w=300&q=80" },
+                { city: "San Francisco", spot: "Golden Gate & Fisherman Wharf", img: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=300&q=80" },
+                { city: "Miami", spot: "South Beach & Wynwood", img: "https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=300&q=80" }
+            ]
+        };
+
+        const UNISEX_PRESETS = [
+            { id: "w1", title: "Organic Cotton Tee", category: "top", weather: "warm", img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80" },
+            { id: "w2", title: "Linen Button-Down", category: "top", weather: "warm", img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&q=80" },
+            { id: "w3", title: "Tailored Trousers", category: "bottom", weather: "warm", img: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&q=80" },
+            { id: "w4", title: "Straight Denim Jeans", category: "bottom", weather: "cold", img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=400&q=80" },
+            { id: "w5", title: "Unstructured Blazer", category: "outerwear", weather: "cold", img: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=400&q=80" },
+            { id: "w6", title: "Classic Trench Coat", category: "outerwear", weather: "cold", img: "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=400&q=80" },
+            { id: "w7", title: "Minimalist Leather Sneakers", category: "shoes", weather: "warm", img: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=400&q=80" },
+            { id: "w8", title: "Chelsea Leather Boots", category: "shoes", weather: "cold", img: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=400&q=80" },
+            { id: "w9", title: "Unisex Acetate Sunglasses", category: "accessory", weather: "warm", img: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=400&q=80" },
+            { id: "w10", title: "Canvas Crossbody Bag", category: "accessory", weather: "warm", img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=400&q=80" }
+        ];
+
+        let appData = {
+            user: null, // Logged in user details
+            destination: "Manila, Philippines",
+            city: "Manila",
+            country: "Philippines",
+            currencySymbol: "₱",
+            currencyCode: "PHP",
+            rateMultiplier: 56.5,
+            totalTripDays: 5,
+            weather: {
+                city: "Manila",
+                country: "Philippines",
+                temp: 31,
+                condition: "Warm & Tropical",
+                humidity: "75%",
+                rain: "20%",
+                wind: "12 km/h",
+                uv: "High (9)",
+                type: "warm",
+                forecast: [
+                    { day: "Day 1", temp: "31°", cond: "Sunny", icon: "fa-sun" },
+                    { day: "Day 2", temp: "32°", cond: "Warm", icon: "fa-sun" },
+                    { day: "Day 3", temp: "30°", cond: "Cloudy", icon: "fa-cloud" },
+                    { day: "Day 4", temp: "29°", cond: "Rain", icon: "fa-cloud-rain" },
+                    { day: "Day 5", temp: "31°", cond: "Clear", icon: "fa-sun" }
+                ]
+            },
+            wardrobe: [...UNISEX_PRESETS],
+            outfits: [],
+            itinerary: [
+                { id: "i1", day: 1, time: "09:30", title: "Walk & Coffee at BGC High Street", category: "dining", location: "Taguig, Metro Manila" },
+                { id: "i2", day: 1, time: "14:00", title: "National Museum & Intramuros Tour", category: "sightseeing", location: "Manila City" },
+                { id: "i3", day: 1, time: "19:00", title: "Sunset Dinner at Poblacion", category: "dining", location: "Makati" }
+            ],
+            currentCanvas: { top: null, bottom: null, outerwear: null, shoes: null, accessory: null },
+            rental: { mode: 'self', vehicle: 'Sedan', baseDailyUSD: 55, days: 3 },
+            currentRide: { tier: 'Executive Chauffeur', baseUSD: 35, active: false }
+        };
+
+        // --- ACCOUNT AUTHENTICATION & USER MANAGEMENT ---
+        let authMode = 'login'; // 'login' or 'register'
+
+        function openAuthModal(mode = 'login') {
+            switchAuthMode(mode);
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function switchAuthMode(mode) {
+            authMode = mode;
+            const loginBtn = document.getElementById('authTabLogin');
+            const regBtn = document.getElementById('authTabRegister');
+            const nameGrp = document.getElementById('nameInputGroup');
+            const policyGrp = document.getElementById('policyGroup');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const modalTitle = document.getElementById('authModalTitle');
+
+            if (mode === 'login') {
+                loginBtn.className = "flex-1 py-2 text-xs font-black rounded-lg bg-white text-black shadow-xs";
+                regBtn.className = "flex-1 py-2 text-xs font-black rounded-lg text-charcoal-800 hover:text-black";
+                nameGrp.classList.add('hidden');
+                policyGrp.classList.add('hidden');
+                submitBtn.innerText = "Sign In to Account";
+                modalTitle.innerText = "Sign In to WanderStyle";
+            } else {
+                regBtn.className = "flex-1 py-2 text-xs font-black rounded-lg bg-white text-black shadow-xs";
+                loginBtn.className = "flex-1 py-2 text-xs font-black rounded-lg text-charcoal-800 hover:text-black";
+                nameGrp.classList.remove('hidden');
+                policyGrp.classList.remove('hidden');
+                submitBtn.innerText = "Create Account & Agree";
+                modalTitle.innerText = "Register New Account";
+            }
+        }
+
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            const email = document.getElementById('authEmailInput').value.trim();
+
+            if (authMode === 'register') {
+                const name = document.getElementById('authNameInput').value.trim() || "Traveler";
+                const agreed = document.getElementById('policyCheckbox').checked;
+
+                if (!agreed) {
+                    showToast("Please agree to the Terms & Privacy Policy to register.");
+                    return;
+                }
+
+                appData.user = { name, email };
+                showToast(`Account created for ${name}! Logged in successfully.`);
+            } else {
+                const name = email.split('@')[0];
+                appData.user = { name, email };
+                showToast(`Welcome back, ${name}! Logged in.`);
+            }
+
+            // Save user session to localStorage for persistent access
+            try {
+                localStorage.setItem('wanderstyle_user', JSON.stringify(appData.user));
+            } catch (e) {
+                console.warn('localStorage not accessible', e);
+            }
+
+            updateAuthUI();
+            closeAuthModal();
+        }
+
+        function updateAuthUI() {
+            if (appData.user) {
+                document.getElementById('userBadgeText').innerText = appData.user.name;
+                document.getElementById('appLockOverlay').classList.add('hidden');
+                document.getElementById('signOutContainer').classList.remove('hidden');
+            } else {
+                document.getElementById('userBadgeText').innerText = "Sign In";
+                document.getElementById('appLockOverlay').classList.remove('hidden');
+                document.getElementById('signOutContainer').classList.add('hidden');
+            }
+        }
+
+        function handleSignOut() {
+            appData.user = null;
+            try {
+                localStorage.removeItem('wanderstyle_user');
+            } catch (e) {
+                console.warn('localStorage not accessible', e);
+            }
+            updateAuthUI();
+            closeAuthModal();
+            showToast("Signed out successfully.");
+        }
+
+        function checkSavedUserSession() {
+            try {
+                const savedUser = localStorage.getItem('wanderstyle_user');
+                if (savedUser) {
+                    appData.user = JSON.parse(savedUser);
+                }
+            } catch (e) {
+                console.warn('localStorage not accessible', e);
+            }
+            updateAuthUI();
+        }
+
+        // --- DYNAMIC DESTINATION, CITY SUGGESTIONS & CURRENCY SYNCING ---
+        function setAppDestination(searchQuery) {
+            const queryLower = searchQuery.toLowerCase().trim();
+            let presetKey = Object.keys(DESTINATION_PRESETS).find(key => queryLower.includes(key));
+            let destData;
+
+            if (presetKey) {
+                destData = DESTINATION_PRESETS[presetKey];
+            } else {
+                const parts = searchQuery.split(',');
+                const city = parts[0].trim();
+                const country = parts[1] ? parts[1].trim() : parts[0].trim();
+                const hash = city.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                const temp = 10 + (hash % 20);
+                const isCold = temp < 18;
+
+                let symbol = "$";
+                let code = "USD";
+                let multiplier = 1;
+                const cLower = country.toLowerCase();
+                if (cLower.includes('philippines')) { symbol = "₱"; code = "PHP"; multiplier = 56.5; }
+                else if (cLower.includes('japan')) { symbol = "¥"; code = "JPY"; multiplier = 150; }
+                else if (cLower.includes('france') || cLower.includes('germany') || cLower.includes('italy') || cLower.includes('spain') || cLower.includes('europe')) { symbol = "€"; code = "EUR"; multiplier = 0.92; }
+                else if (cLower.includes('kingdom') || cLower.includes('uk') || cLower.includes('england')) { symbol = "£"; code = "GBP"; multiplier = 0.79; }
+
+                destData = {
+                    name: `${city}, ${country}`,
+                    city: city,
+                    country: country,
+                    heroImg: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80",
+                    routeStart: `${city} Airport / Terminal`,
+                    routeEnd: `Central ${city} Historic District`,
+                    currencySymbol: symbol,
+                    currencyCode: code,
+                    rateMultiplier: multiplier,
+                    pickupHubs: [`${city} Main Airport`, `${city} Central Station`, `Downtown ${city} Desk`],
+                    dropoffDefault: `Central ${city} Landmark`,
+                    registeredDriver: {
+                        name: `Driver Alex R. (${city})`,
+                        vehicle: `Executive Sedan`,
+                        plate: `REG-${hash % 9000 + 1000}`,
+                        rating: "4.96 ★",
+                        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
+                    },
+                    paymentMethods: [
+                        { id: "digital", name: `Local Wallet / Digital Payment (${code})` },
+                        { id: "card", name: "Credit / Debit Card" },
+                        { id: "cash", name: "Cash" }
+                    ],
+                    activities: [
+                        { time: "10:00", title: `Explore Historic ${city}`, category: "sightseeing", location: city },
+                        { time: "14:00", title: `Local Dining & Market`, category: "dining", location: city },
+                        { time: "19:00", title: `Promenade Walk`, category: "sightseeing", location: city }
+                    ],
+                    weather: {
+                        temp: temp,
+                        condition: isCold ? "Cool & Crisp" : "Warm & Sunny",
+                        humidity: `${45 + (hash % 30)}%`,
+                        rain: `${hash % 25}%`,
+                        wind: `${10 + (hash % 10)} km/h`,
+                        uv: isCold ? "Low (2)" : "Moderate (6)",
+                        type: isCold ? "cold" : "warm"
+                    }
+                };
+            }
+
+            appData.destination = destData.name;
+            appData.city = destData.city;
+            appData.country = destData.country;
+            appData.currencySymbol = destData.currencySymbol;
+            appData.currencyCode = destData.currencyCode;
+            appData.rateMultiplier = destData.rateMultiplier;
+
+            // Render Suggested Cities for the country
+            renderCountrySuggestions(destData.country);
+
+            const wTemp = destData.weather.temp;
+            const isCold = destData.weather.type === 'cold';
+            appData.weather = {
+                city: destData.city,
+                country: destData.country,
+                temp: wTemp,
+                condition: destData.weather.condition,
+                humidity: destData.weather.humidity,
+                rain: destData.weather.rain,
+                wind: destData.weather.wind,
+                uv: destData.weather.uv,
+                type: destData.weather.type,
+                forecast: [
+                    { day: "Day 1", temp: `${wTemp}°`, cond: destData.weather.condition, icon: isCold ? "fa-cloud" : "fa-sun" },
+                    { day: "Day 2", temp: `${wTemp + 2}°`, cond: "Clear", icon: "fa-sun" },
+                    { day: "Day 3", temp: `${wTemp - 1}°`, cond: isCold ? "Breezy" : "Warm", icon: isCold ? "fa-wind" : "fa-sun" },
+                    { day: "Day 4", temp: `${wTemp + 1}°`, cond: "Partly Cloudy", icon: "fa-cloud-sun" },
+                    { day: "Day 5", temp: `${wTemp}°`, cond: "Clear", icon: "fa-sun" }
+                ]
+            };
+
+            document.getElementById('currentDestBadge').innerText = destData.name;
+            const heroBg = document.getElementById('heroBgImage');
+            if (heroBg && destData.heroImg) heroBg.style.backgroundImage = `url('${destData.heroImg}')`;
+
+            renderWeather();
+
+            document.getElementById('itineraryDestBadge').innerText = destData.name;
+            appData.itinerary = destData.activities.map((act, idx) => ({
+                id: `i_${Date.now()}_${idx}`,
+                day: 1,
+                time: act.time,
+                title: act.title,
+                category: act.category || "sightseeing",
+                location: act.location
+            }));
+            renderItinerary();
+
+            document.getElementById('navDestBadge').innerText = destData.city;
+            document.getElementById('routeStartInput').value = destData.routeStart;
+            document.getElementById('routeEndInput').value = destData.routeEnd;
+            calculateCurrentRoute();
+
+            document.getElementById('transitDestBadge').innerText = destData.country;
+            document.getElementById('transitCurrencyLabel').innerText = `${destData.currencySymbol} ${destData.currencyCode}`;
+            document.querySelectorAll('.currency-label-span').forEach(el => el.innerText = destData.currencyCode);
+            document.getElementById('grabDropoffInput').value = destData.dropoffDefault;
+
+            const pickupSelect = document.getElementById('grabPickupSelect');
+            pickupSelect.innerHTML = destData.pickupHubs.map(hub => `<option value="${hub}">${hub}</option>`).join('');
+            
+            const rentalPickup = document.getElementById('rentalPickupLocation');
+            rentalPickup.innerHTML = destData.pickupHubs.map(hub => `<option value="${hub}">${hub}</option>`).join('');
+
+            const driver = destData.registeredDriver;
+            document.getElementById('detectedDriverName').innerText = driver.name;
+            document.getElementById('detectedDriverRating').innerText = driver.rating;
+            document.getElementById('detectedDriverMeta').innerText = `Registered Driver in ${destData.city} • ${driver.vehicle} (${driver.plate})`;
+            document.getElementById('detectedDriverAvatar').src = driver.avatar;
+
+            const paySelect = document.getElementById('grabPaymentMethodSelect');
+            const rentalPaySelect = document.getElementById('rentalPaymentMethodSelect');
+            const paymentOptionsHtml = destData.paymentMethods.map(pm => `<option value="${pm.id}">${pm.name}</option>`).join('');
+            paySelect.innerHTML = paymentOptionsHtml;
+            rentalPaySelect.innerHTML = paymentOptionsHtml;
+
+            renderRideTiers();
+            updateRentalPrice();
+
+            document.getElementById('rideStatusText').innerText = `Grab Premium • Ready (${destData.city})`;
+            document.getElementById('driverDetails').innerText = `Driver: ${driver.name} (${driver.vehicle} • ${driver.plate})`;
+
+            updateWeatherOutfitMatchBanner();
+            showToast(`Connected destination & detected driver in ${destData.city}!`);
+        }
+
+        function handleDestSearch(event) {
+            event.preventDefault();
+            const country = document.getElementById('destCountryInput').value.trim();
+            const city = document.getElementById('destCityInput').value.trim();
+            const query = city ? `${city}, ${country}` : country;
+            if (query) setAppDestination(query);
+        }
+
+        function renderCountrySuggestions(countryName) {
+            const container = document.getElementById('suggestedCitiesContainer');
+            document.getElementById('suggestedCountryName').innerText = countryName;
+            const cLower = countryName.toLowerCase();
+            let key = Object.keys(COUNTRY_RECOMMENDATIONS).find(k => cLower.includes(k));
+            const spots = key ? COUNTRY_RECOMMENDATIONS[key] : [
+                { city: `Central ${countryName}`, spot: "Old Town Plaza", img: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=300&q=80" },
+                { city: `North ${countryName}`, spot: "Coastal Promenade", img: "https://images.unsplash.com/photo-1518509562880-c7f29bc8e84f?auto=format&fit=crop&w=300&q=80" },
+                { city: `South ${countryName}`, spot: "Heritage Site & Market", img: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=300&q=80" }
+            ];
+
+            container.innerHTML = spots.map(item => `
+                <div onclick="setAppDestination('${item.city}, ${countryName}')" class="group bg-stone-100 hover:bg-stone-200 p-2.5 rounded-2xl border border-stone-200 cursor-pointer transition flex items-center gap-3">
+                    <img src="${item.img}" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-stone-300">
+                    <div class="overflow-hidden">
+                        <h4 class="text-xs font-black text-black group-hover:text-terracotta-500 transition truncate">${item.city}</h4>
+                        <p class="text-[10px] font-bold text-charcoal-800 truncate">${item.spot}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- ENHANCED ITINERARY PLANNER & DYNAMIC TRIP DAY MANAGEMENT ---
+        let selectedDay = 1;
+        let editingActivityId = null;
+
+        function addItineraryDay() {
+            appData.totalTripDays += 1;
+            renderItinerary();
+            showToast(`Added Day ${appData.totalTripDays} to itinerary!`);
+        }
+
+        function removeItineraryDay() {
+            if (appData.totalTripDays <= 1) {
+                showToast("Trip itinerary must have at least 1 day!");
+                return;
+            }
+            appData.itinerary = appData.itinerary.filter(i => i.day !== selectedDay);
+            appData.totalTripDays -= 1;
+            if (selectedDay > appData.totalTripDays) selectedDay = appData.totalTripDays;
+            renderItinerary();
+            showToast(`Removed selected day from itinerary.`);
+        }
+
+        function renderItinerary() {
+            const nav = document.getElementById('itineraryDaysNav');
+            let dayButtonsHtml = '';
+            for (let day = 1; day <= appData.totalTripDays; day++) {
+                dayButtonsHtml += `
+                    <button onclick="selectItineraryDay(${day})" class="px-5 py-2.5 rounded-2xl text-xs font-extrabold transition whitespace-nowrap flex items-center gap-2 ${day === selectedDay ? 'bg-black text-white shadow-md' : 'bg-white text-black border border-stone-300 hover:bg-stone-100'}">
+                        <i class="fa-solid fa-calendar-day ${day === selectedDay ? 'text-sand-500' : 'text-stone-400'}"></i>
+                        <span>Day ${day}</span>
+                    </button>
+                `;
+            }
+            nav.innerHTML = dayButtonsHtml;
+
+            const list = document.getElementById('itineraryList');
+            const dayItems = appData.itinerary.filter(i => i.day === selectedDay);
+
+            if (dayItems.length === 0) {
+                list.innerHTML = `
+                    <div class="bg-white rounded-3xl p-10 border border-stone-200 text-center shadow-xs">
+                        <div class="w-14 h-14 rounded-full bg-stone-100 text-stone-400 mx-auto flex items-center justify-center text-2xl mb-3 border border-stone-200">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                        </div>
+                        <h4 class="text-sm font-black text-black mb-1">No plans added for Day ${selectedDay} in ${appData.city}</h4>
+                        <p class="text-xs font-bold text-charcoal-800 mb-5">Click below to add your first activity!</p>
+                        <button onclick="openItineraryModal()" class="px-5 py-2.5 bg-terracotta-500 hover:bg-terracotta-600 text-white font-extrabold rounded-xl text-xs shadow-md transition inline-flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Add Day ${selectedDay} Activity
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = dayItems.map(item => {
+                const cat = CATEGORY_META[item.category] || CATEGORY_META.sightseeing;
+                return `
+                    <div class="bg-white rounded-2xl p-4 sm:p-5 border border-stone-200 shadow-xs hover:shadow-md transition flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4">
+                            <div class="flex flex-col items-center justify-center px-3 py-2 bg-stone-100 rounded-2xl border border-stone-300 shrink-0">
+                                <span class="text-xs font-black text-black font-mono">${item.time}</span>
+                                <span class="text-[9px] font-bold text-charcoal-800 uppercase">Schedule</span>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${cat.bg}">
+                                        <i class="fa-solid ${cat.icon}"></i> ${cat.label}
+                                    </span>
+                                    <h4 class="text-sm font-black text-black">${item.title}</h4>
+                                </div>
+                                <p class="text-xs font-bold text-charcoal-900 flex items-center gap-1.5 pt-0.5">
+                                    <i class="fa-solid fa-location-dot text-terracotta-500"></i> ${item.location || appData.city}
+                                </p>
+                                ${item.notes ? `<p class="text-[11px] font-semibold text-charcoal-800 bg-stone-50 p-2 rounded-xl border border-stone-200 mt-2"><i class="fa-solid fa-note-sticky text-sand-600 mr-1"></i>${item.notes}</p>` : ''}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-center border-t sm:border-t-0 pt-2 sm:pt-0 border-stone-100 w-full sm:w-auto justify-end">
+                            <button onclick="editItineraryItem('${item.id}')" class="px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-black font-bold rounded-xl text-xs transition flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square text-terracotta-500"></i> Edit
+                            </button>
+                            <button onclick="deleteItineraryItem('${item.id}')" class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 font-bold rounded-xl text-xs transition flex items-center gap-1">
+                                <i class="fa-solid fa-trash-can"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectItineraryDay(day) {
+            selectedDay = day;
+            renderItinerary();
+        }
+
+        function openItineraryModal(editId = null) {
+            editingActivityId = editId;
+            const modal = document.getElementById('itineraryModal');
+            document.getElementById('modalSub').innerText = `Day ${selectedDay} Plan • ${appData.city}`;
+
+            if (editId) {
+                const act = appData.itinerary.find(i => i.id === editId);
+                if (act) {
+                    document.getElementById('modalTitle').innerText = "Edit Trip Activity";
+                    document.getElementById('actTitleInput').value = act.title;
+                    document.getElementById('actCategoryInput').value = act.category || "sightseeing";
+                    document.getElementById('actTimeInput').value = act.time;
+                    document.getElementById('actLocationInput').value = act.location;
+                    document.getElementById('actNotesInput').value = act.notes || "";
+                }
+            } else {
+                document.getElementById('modalTitle').innerText = "Add Trip Activity";
+                document.getElementById('activityForm').reset();
+                document.getElementById('actTimeInput').value = "10:00";
+                document.getElementById('actLocationInput').value = appData.city;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeItineraryModal() {
+            document.getElementById('itineraryModal').classList.add('hidden');
+            editingActivityId = null;
+        }
+
+        function editItineraryItem(id) {
+            openItineraryModal(id);
+        }
+
+        function saveActivitySubmit(event) {
+            event.preventDefault();
+            const title = document.getElementById('actTitleInput').value.trim();
+            const category = document.getElementById('actCategoryInput').value;
+            const time = document.getElementById('actTimeInput').value;
+            const location = document.getElementById('actLocationInput').value.trim() || appData.city;
+            const notes = document.getElementById('actNotesInput').value.trim();
+
+            if (!title) return;
+
+            if (editingActivityId) {
+                const act = appData.itinerary.find(i => i.id === editingActivityId);
+                if (act) {
+                    act.title = title;
+                    act.category = category;
+                    act.time = time;
+                    act.location = location;
+                    act.notes = notes;
+                }
+                showToast("Updated activity details!");
+            } else {
+                appData.itinerary.push({
+                    id: 'i_' + Date.now(),
+                    day: selectedDay,
+                    time: time,
+                    title: title,
+                    category: category,
+                    location: location,
+                    notes: notes
+                });
+                showToast(`Added plan to Day ${selectedDay}!`);
+            }
+
+            closeItineraryModal();
+            renderItinerary();
+        }
+
+        function deleteItineraryItem(id) {
+            appData.itinerary = appData.itinerary.filter(i => i.id !== id);
+            renderItinerary();
+            showToast("Activity removed.");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-100px]', 'opacity-0');
+            }, 3000);
+        }
+
+        window.onload = function() {
+            checkSavedUserSession();
+            setAppDestination("Manila, Philippines");
+            renderWardrobe();
+            renderPickerItems('top');
+            renderSavedOutfits();
+        };
+
+        // --- RESTORED CORE APPLICATION UTILITY & HANDLER FUNCTIONS ---
+        function renderWeather() {
+            const w = appData.weather;
+            const weatherCity = document.getElementById('weatherCity');
+            const weatherCountry = document.getElementById('weatherCountry');
+            const weatherTemp = document.getElementById('weatherTemp');
+            const weatherCondition = document.getElementById('weatherCondition');
+            const weatherHumidity = document.getElementById('weatherHumidity');
+            const weatherRain = document.getElementById('weatherRain');
+            const weatherWind = document.getElementById('weatherWind');
+            const weatherUV = document.getElementById('weatherUV');
+            const weatherIcon = document.getElementById('weatherIcon');
+            const forecastContainer = document.getElementById('forecastContainer');
+            const packingAdvice = document.getElementById('packingAdvice');
+
+            if (weatherCity) weatherCity.innerText = w.city;
+            if (weatherCountry) weatherCountry.innerText = w.country;
+            if (weatherTemp) weatherTemp.innerText = `${w.temp}°`;
+            if (weatherCondition) weatherCondition.innerText = w.condition;
+            if (weatherHumidity) weatherHumidity.innerText = w.humidity;
+            if (weatherRain) weatherRain.innerText = w.rain;
+            if (weatherWind) weatherWind.innerText = w.wind;
+            if (weatherUV) weatherUV.innerText = w.uv;
+
+            if (weatherIcon) {
+                weatherIcon.innerHTML = w.type === 'cold' 
+                    ? `<i class="fa-solid fa-cloud-sun"></i>` 
+                    : `<i class="fa-solid fa-sun text-terracotta-500"></i>`;
+            }
+
+            if (forecastContainer) {
+                forecastContainer.innerHTML = w.forecast.map(item => `
+                    <div class="bg-stone-100 p-2.5 rounded-2xl flex flex-col items-center justify-between text-center border border-stone-200">
+                        <span class="text-[10px] font-extrabold text-charcoal-800 uppercase">${item.day}</span>
+                        <i class="fa-solid ${item.icon} text-terracotta-500 text-lg my-2"></i>
+                        <span class="text-xs font-black text-black">${item.temp}</span>
+                        <span class="text-[9px] font-bold text-stone-500">${item.cond}</span>
+                    </div>
+                `).join('');
+            }
+
+            if (packingAdvice) {
+                packingAdvice.innerText = w.type === 'cold'
+                    ? `Cool climate in ${w.city} (${w.temp}°C). Pack warm layers, outerwear, and sturdy boots.`
+                    : `Warm tropical/mild climate in ${w.city} (${w.temp}°C). Pack breathable linen tops, sunglasses, and comfortable sneakers.`;
+            }
+        }
+
+        function renderRideTiers() {
+            const container = document.getElementById('rideTiersContainer');
+            if (!container) return;
+            const sym = appData.currencySymbol;
+            const mult = appData.rateMultiplier;
+            const p1 = Math.round(10 * mult);
+            const p2 = Math.round(18 * mult);
+            const p3 = Math.round(5 * mult);
+
+            container.innerHTML = `
+                <div onclick="selectRideTier(this, 'Standard Express', ${p1})" class="ride-tier-card p-3 rounded-2xl border border-stone-300 bg-white flex items-center justify-between cursor-pointer transition hover:border-stone-400">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-car text-black text-lg"></i>
+                        <div>
+                            <p class="text-xs font-black text-black">GrabCar Standard</p>
+                            <p class="text-[10px] font-bold text-stone-500">Fast everyday city ride</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-black text-black">${sym}${p1.toLocaleString()}</span>
+                </div>
+
+                <div onclick="selectRideTier(this, 'Executive Chauffeur', ${p2})" class="ride-tier-card p-3 rounded-2xl border-2 border-charcoal-900 bg-stone-100 flex items-center justify-between cursor-pointer transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-car-side text-terracotta-500 text-lg"></i>
+                        <div>
+                            <p class="text-xs font-black text-black">Executive Chauffeur Sedan</p>
+                            <p class="text-[10px] font-bold text-stone-500">Premium comfort & legroom</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-black text-black">${sym}${p2.toLocaleString()}</span>
+                </div>
+
+                <div onclick="selectRideTier(this, 'Express Bike / Trike', ${p3})" class="ride-tier-card p-3 rounded-2xl border border-stone-300 bg-white flex items-center justify-between cursor-pointer transition hover:border-stone-400">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-motorcycle text-olive-600 text-lg"></i>
+                        <div>
+                            <p class="text-xs font-black text-black">Express Bike / JoyRide</p>
+                            <p class="text-[10px] font-bold text-stone-500">Bypass heavy traffic</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-black text-black">${sym}${p3.toLocaleString()}</span>
+                </div>
+            `;
+        }
+
+        function selectVehicle(type, baseUSD) {
+            appData.rental.vehicle = type;
+            appData.rental.baseDailyUSD = baseUSD;
+
+            const mult = appData.rateMultiplier;
+            const sym = appData.currencySymbol;
+            const rSedan = document.getElementById('rateSedanDisplay');
+            const rSUV = document.getElementById('rateSUVDisplay');
+            const rVan = document.getElementById('rateVanDisplay');
+
+            if (rSedan) rSedan.innerText = `${sym}${Math.round(55 * mult).toLocaleString()}/day`;
+            if (rSUV) rSUV.innerText = `${sym}${Math.round(85 * mult).toLocaleString()}/day`;
+            if (rVan) rVan.innerText = `${sym}${Math.round(120 * mult).toLocaleString()}/day`;
+
+            document.querySelectorAll('.vehicle-btn').forEach(btn => {
+                btn.className = "vehicle-btn border border-stone-300 bg-white p-2.5 rounded-2xl flex flex-col items-center text-center hover:border-stone-400";
+            });
+            if (window.event && window.event.currentTarget) {
+                window.event.currentTarget.className = "vehicle-btn border-2 border-charcoal-900 bg-stone-50 p-2.5 rounded-2xl flex flex-col items-center text-center";
+            }
+            updateRentalPrice();
+        }
+
+        function toggleRentalMode(mode) {
+            appData.rental.mode = mode;
+            const btnSelf = document.getElementById('btnSelfDrive');
+            const btnDriver = document.getElementById('btnWithDriver');
+
+            if (mode === 'self') {
+                if (btnSelf) btnSelf.className = "py-2 text-xs font-black rounded-lg bg-white shadow-xs text-black";
+                if (btnDriver) btnDriver.className = "py-2 text-xs font-black rounded-lg text-charcoal-800 hover:text-black";
+            } else {
+                if (btnDriver) btnDriver.className = "py-2 text-xs font-black rounded-lg bg-white shadow-xs text-black";
+                if (btnSelf) btnSelf.className = "py-2 text-xs font-black rounded-lg text-charcoal-800 hover:text-black";
+            }
+            updateRentalPrice();
+        }
+
+        function updateRentalPrice() {
+            const daysInput = document.getElementById('rentalDays');
+            const days = daysInput ? (parseInt(daysInput.value) || 1) : 1;
+            appData.rental.days = days;
+            const driverFeeUSD = appData.rental.mode === 'driver' ? 35 : 0;
+            const totalUSD = (appData.rental.baseDailyUSD + driverFeeUSD) * days;
+            const converted = Math.round(totalUSD * appData.rateMultiplier);
+
+            const totalDisplay = document.getElementById('rentalTotalDisplay');
+            if (totalDisplay) {
+                totalDisplay.innerText = `${appData.currencySymbol}${converted.toLocaleString()} ${appData.currencyCode}`;
+            }
+        }
+
+        function selectRideTier(card, tierName, price) {
+            appData.currentRide.tier = tierName;
+            appData.currentRide.price = price;
+
+            document.querySelectorAll('.ride-tier-card').forEach(c => {
+                c.className = "ride-tier-card p-3 rounded-2xl border border-stone-300 bg-white flex items-center justify-between cursor-pointer transition hover:border-stone-400";
+            });
+            card.className = "ride-tier-card p-3 rounded-2xl border-2 border-charcoal-900 bg-stone-50 flex items-center justify-between cursor-pointer transition";
+        }
+
+        function bookGrabRide() {
+            const pickupSelect = document.getElementById('grabPickupSelect');
+            const dropoffInput = document.getElementById('grabDropoffInput');
+            const pickup = pickupSelect ? pickupSelect.value : "Arrival Hub";
+            const dropoff = dropoffInput ? dropoffInput.value : "Destination";
+
+            const statusText = document.getElementById('rideStatusText');
+            const driverDetails = document.getElementById('driverDetails');
+            const rideETA = document.getElementById('rideETA');
+
+            if (statusText) statusText.innerText = `${appData.currentRide.tier} • Confirmed`;
+            if (driverDetails) driverDetails.innerText = `Pick-up: ${pickup} → Drop-off: ${dropoff}`;
+            if (rideETA) rideETA.innerText = `ETA: 3 Mins`;
+
+            showToast(`Booked ${appData.currentRide.tier} in ${appData.city}!`);
+        }
+
+        function cancelRideSim() {
+            const statusText = document.getElementById('rideStatusText');
+            const driverDetails = document.getElementById('driverDetails');
+            const rideETA = document.getElementById('rideETA');
+
+            if (statusText) statusText.innerText = `Booking Cancelled`;
+            if (driverDetails) driverDetails.innerText = `No active ride request.`;
+            if (rideETA) rideETA.innerText = `ETA: --`;
+            showToast("Ride request cancelled.");
+        }
+
+        function reserveCarRental() {
+            const locSelect = document.getElementById('rentalPickupLocation');
+            const loc = locSelect ? locSelect.value : "Pickup Hub";
+            showToast(`Reserved ${appData.rental.vehicle} for ${appData.rental.days} days in ${appData.city}!`);
+        }
+
+        function calculateCurrentRoute() {
+            const startInput = document.getElementById('routeStartInput');
+            const endInput = document.getElementById('routeEndInput');
+            const start = startInput ? (startInput.value.trim() || 'Start Hub') : 'Start Hub';
+            const end = endInput ? (endInput.value.trim() || 'Landmark') : 'Landmark';
+
+            const titleDisplay = document.getElementById('routeTitleDisplay');
+            if (titleDisplay) titleDisplay.innerText = `${start} → ${end}`;
+            
+            const hash = (start + end + appData.city).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const distance = (8 + (hash % 20) + (hash % 5) * 0.4).toFixed(1);
+            const travelTime = Math.round(distance * 1.8);
+            const tollLocal = Math.round(distance * 18 * (appData.rateMultiplier / 10));
+
+            const distanceDisplay = document.getElementById('routeDistanceDisplay');
+            const timeEst = document.getElementById('routeTimeEst');
+            const tollEst = document.getElementById('routeTollEst');
+
+            if (distanceDisplay) distanceDisplay.innerText = `Distance: ~${distance} km in ${appData.city}`;
+            if (timeEst) timeEst.innerText = `${travelTime} mins`;
+            if (tollEst) tollEst.innerText = `${appData.currencySymbol}${tollLocal.toLocaleString()} ${appData.currencyCode}`;
+
+            const turnList = [
+                { text: `Depart from ${start} onto primary expressway`, dist: "1.2 km" },
+                { text: `Merge towards ${appData.city} Center / District`, dist: `${(distance * 0.6).toFixed(1)} km` },
+                { text: `Take exit towards ${end}`, dist: `${(distance * 0.3).toFixed(1)} km` },
+                { text: `Arrive at site destination parking zone`, dist: "0.4 km" }
+            ];
+
+            const turnContainer = document.getElementById('turnByTurnList');
+            if (turnContainer) {
+                turnContainer.innerHTML = turnList.map((step, idx) => `
+                    <div class="flex items-start gap-3 p-2.5 rounded-xl bg-stone-100 border border-stone-200">
+                        <span class="w-5 h-5 rounded-full bg-charcoal-900 text-white text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                        <div class="flex-1">
+                            <p class="text-xs font-extrabold text-black">${step.text}</p>
+                            <span class="text-[10px] font-bold text-stone-500">${step.dist}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function openExternalMaps() {
+            const startInput = document.getElementById('routeStartInput');
+            const endInput = document.getElementById('routeEndInput');
+            const start = encodeURIComponent(startInput ? startInput.value : '');
+            const end = encodeURIComponent(endInput ? endInput.value : '');
+            window.open(`https://www.google.com/maps/dir/?api=1&origin=${start}&destination=${end}`, '_blank');
+        }
+
+        function copyRouteDetails() {
+            const startInput = document.getElementById('routeStartInput');
+            const endInput = document.getElementById('routeEndInput');
+            const start = startInput ? startInput.value : '';
+            const end = endInput ? endInput.value : '';
+            const text = `WanderStyle Route in ${appData.city}: From ${start} to ${end}.`;
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast("Copied route directions!");
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.remove('text-charcoal-800');
+                    btn.classList.add('text-black');
+                } else {
+                    btn.classList.remove('text-black');
+                    btn.classList.add('text-charcoal-800');
+                }
+            });
+
+            document.querySelectorAll('.desktop-nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.remove('text-stone-300');
+                    btn.classList.add('bg-terracotta-500', 'text-white');
+                } else {
+                    btn.classList.remove('bg-terracotta-500', 'text-white');
+                    btn.classList.add('text-stone-300');
+                }
+            });
+        }
+
+        let activeFilter = 'all';
+
+        function renderWardrobe() {
+            const grid = document.getElementById('wardrobeGrid');
+            if (!grid) return;
+            const items = activeFilter === 'all' 
+                ? appData.wardrobe 
+                : appData.wardrobe.filter(item => item.category === activeFilter);
+
+            grid.innerHTML = items.map(item => `
+                <div class="bg-white rounded-2xl p-2.5 border border-stone-200 shadow-xs flex flex-col group relative">
+                    <div class="w-full h-36 bg-stone-50 rounded-xl overflow-hidden mb-2 relative">
+                        <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <span class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-charcoal-900/80 backdrop-blur-xs text-white text-[9px] font-bold uppercase tracking-wider">${item.category}</span>
+                        <button onclick="deleteWardrobeItem('${item.id}')" class="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/90 hover:bg-red-500 hover:text-white text-black text-[10px] flex items-center justify-center transition shadow-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <h4 class="text-xs font-black text-black truncate">${item.title}</h4>
+                    <span class="text-[10px] text-stone-500 capitalize font-bold">${item.weather || 'Versatile'} weather</span>
+                </div>
+            `).join('');
+        }
+
+        function filterWardrobe(cat) {
+            activeFilter = cat;
+            document.querySelectorAll('.wardrobe-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-cat') === cat) {
+                    btn.className = "wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-extrabold bg-charcoal-900 text-white shadow-sm";
+                } else {
+                    btn.className = "wardrobe-filter-btn px-4 py-2 rounded-xl text-xs font-extrabold bg-white text-black border border-stone-300 hover:bg-stone-100";
+                }
+            });
+            renderWardrobe();
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const category = prompt("Enter category (top, bottom, outerwear, shoes, accessory):", "top")?.toLowerCase().trim() || "top";
+                const validCategory = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].includes(category) ? category : 'top';
+                const title = prompt("Enter title for this item:", "Custom Clothes Item") || "Custom Clothes Item";
+
+                const newItem = {
+                    id: 'w_' + Date.now(),
+                    title: title,
+                    category: validCategory,
+                    weather: 'all',
+                    img: e.target.result
+                };
+
+                appData.wardrobe.push(newItem);
+                renderWardrobe();
+                renderPickerItems('top');
+                showToast("Photo added to capsule wardrobe!");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleDirectOutfitCapture(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const category = prompt("Which category is this item?\n(top, bottom, outerwear, shoes, accessory)", "top")?.toLowerCase().trim() || "top";
+                const validCategory = ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].includes(category) ? category : 'top';
+                const title = prompt("Give this item a name:", "My Snap " + validCategory.toUpperCase()) || "Captured Item";
+
+                const newItem = {
+                    id: 'w_' + Date.now(),
+                    title: title,
+                    category: validCategory,
+                    weather: appData.weather.type,
+                    img: e.target.result
+                };
+
+                appData.wardrobe.push(newItem);
+                appData.currentCanvas[validCategory] = newItem;
+
+                renderWardrobe();
+                renderPickerItems(validCategory);
+                updateCanvasSlot(validCategory);
+                updateWeatherOutfitMatchBanner();
+
+                showToast(`Equipped "${title}" for ${appData.city}!`);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateWeatherOutfitMatchBanner() {
+            const w = appData.weather;
+            const destLabel = document.getElementById('outfitDestWeatherLabel');
+            const targetText = document.getElementById('outfitTargetWeatherText');
+            const matchScore = document.getElementById('outfitMatchScore');
+            const weatherTip = document.getElementById('outfitWeatherTip');
+
+            if (destLabel) destLabel.innerText = `${w.city}'s Weather`;
+            if (targetText) targetText.innerText = `${w.condition} (${w.temp}°)`;
+
+            const activeItems = Object.values(appData.currentCanvas).filter(Boolean);
+            if (activeItems.length === 0) {
+                if (matchScore) matchScore.innerText = "0% Equipped";
+                if (weatherTip) weatherTip.innerText = `Tap "Generate Weather Outfit" or equip items suited for ${w.city}'s climate (${w.temp}°C).`;
+                return;
+            }
+
+            let score = 96;
+            let tip = "";
+
+            if (w.type === 'cold') {
+                if (!appData.currentCanvas.outerwear) {
+                    score -= 20;
+                    tip = `Tip for ${w.city}: It's ${w.temp}°C! Consider adding an outerwear layer.`;
+                } else {
+                    tip = `Great outerwear equipped for ${w.city}'s cool weather!`;
+                }
+            } else {
+                if (appData.currentCanvas.outerwear) {
+                    score -= 10;
+                    tip = `Tip for ${w.city}: Warm weather (${w.temp}°C). Lightweight tees and linen are ideal.`;
+                } else {
+                    tip = `Perfect lightweight outfit for ${w.city}'s climate!`;
+                }
+            }
+
+            if (matchScore) matchScore.innerHTML = `<i class="fa-solid fa-shield-check"></i> ${score}% Weather Compatible`;
+            if (weatherTip) weatherTip.innerText = tip;
+        }
+
+        function deleteWardrobeItem(id) {
+            appData.wardrobe = appData.wardrobe.filter(item => item.id !== id);
+            renderWardrobe();
+            renderPickerItems('top');
+            showToast("Item removed from wardrobe.");
+        }
+
+        function loadUnisexPresets() {
+            appData.wardrobe = [...UNISEX_PRESETS];
+            renderWardrobe();
+            renderPickerItems('top');
+            showToast("Restored default capsule wardrobe!");
+        }
+
+        let activePickerCategory = 'top';
+
+        function switchPickerCategory(cat) {
+            activePickerCategory = cat;
+            document.querySelectorAll('.picker-cat-btn').forEach(btn => {
+                if (btn.getAttribute('data-cat') === cat) {
+                    btn.className = "picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-black rounded-lg bg-white shadow-xs text-black";
+                } else {
+                    btn.className = "picker-cat-btn flex-1 py-1.5 px-2 text-[11px] font-black rounded-lg text-charcoal-800 hover:text-black";
+                }
+            });
+            renderPickerItems(cat);
+        }
+
+        function renderPickerItems(cat) {
+            const container = document.getElementById('pickerItemsGrid');
+            if (!container) return;
+            const items = appData.wardrobe.filter(item => item.category === cat);
+
+            if (items.length === 0) {
+                container.innerHTML = `<p class="col-span-3 text-center text-xs font-bold text-stone-500 py-6">No items in this category.</p>`;
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                <div onclick="equipItem('${item.id}')" class="bg-stone-50 hover:bg-stone-100 p-2 rounded-2xl border border-stone-200 cursor-pointer transition flex flex-col items-center text-center group">
+                    <img src="${item.img}" alt="${item.title}" class="w-full h-16 object-cover rounded-xl mb-1 group-hover:scale-105 transition">
+                    <span class="text-[10px] font-black text-black truncate w-full">${item.title}</span>
+                </div>
+            `).join('');
+        }
+
+        function equipItem(itemId) {
+            const item = appData.wardrobe.find(i => i.id === itemId);
+            if (!item) return;
+
+            appData.currentCanvas[item.category] = item;
+            updateCanvasSlot(item.category);
+            updateWeatherOutfitMatchBanner();
+            showToast(`Equipped ${item.title}`);
+        }
+
+        function updateCanvasSlot(category) {
+            const slot = document.getElementById(`slot-${category}`);
+            if (!slot) return;
+            const item = appData.currentCanvas[category];
+
+            if (!item) {
+                slot.innerHTML = `<span class="text-xs text-charcoal-800 uppercase font-black tracking-widest text-[10px]">${category} Layer</span>`;
+            } else {
+                slot.innerHTML = `
+                    <div class="flex items-center gap-3 w-full h-full px-2">
+                        <img src="${item.img}" class="w-12 h-12 object-cover rounded-lg border border-stone-200">
+                        <div class="flex-1 text-left">
+                            <p class="text-xs font-black text-black">${item.title}</p>
+                            <span class="text-[9px] uppercase tracking-wider font-extrabold text-stone-500">${item.category}</span>
+                        </div>
+                        <button onclick="unequipItem('${category}')" class="text-stone-400 hover:text-red-500 p-1 text-xs">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function unequipItem(category) {
+            appData.currentCanvas[category] = null;
+            updateCanvasSlot(category);
+            updateWeatherOutfitMatchBanner();
+        }
+
+        function clearCanvas() {
+            appData.currentCanvas = { top: null, bottom: null, outerwear: null, shoes: null, accessory: null };
+            ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].forEach(cat => updateCanvasSlot(cat));
+            updateWeatherOutfitMatchBanner();
+            showToast("Canvas cleared.");
+        }
+
+        function autoGenerateOutfit() {
+            const weatherType = appData.weather.type;
+            const tops = appData.wardrobe.filter(i => i.category === 'top');
+            const bottoms = appData.wardrobe.filter(i => i.category === 'bottom');
+            const outerw = appData.wardrobe.filter(i => i.category === 'outerwear');
+            const shoes = appData.wardrobe.filter(i => i.category === 'shoes');
+            const accs = appData.wardrobe.filter(i => i.category === 'accessory');
+
+            appData.currentCanvas = {
+                top: tops.length ? tops[Math.floor(Math.random() * tops.length)] : null,
+                bottom: bottoms.length ? bottoms[Math.floor(Math.random() * bottoms.length)] : null,
+                outerwear: weatherType === 'cold' && outerw.length ? outerw[Math.floor(Math.random() * outerw.length)] : null,
+                shoes: shoes.length ? shoes[Math.floor(Math.random() * shoes.length)] : null,
+                accessory: accs.length ? accs[Math.floor(Math.random() * accs.length)] : null
+            };
+
+            ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].forEach(cat => updateCanvasSlot(cat));
+            updateWeatherOutfitMatchBanner();
+            showToast(`Auto-generated outfit for ${appData.city}!`);
+        }
+
+        function saveCurrentOutfit() {
+            const nameInput = document.getElementById('outfitNameInput');
+            const titleInput = nameInput ? nameInput.value.trim() : '';
+            const title = titleInput || `${appData.city} Aesthetic Look #${appData.outfits.length + 1}`;
+            const equippedCount = Object.values(appData.currentCanvas).filter(Boolean).length;
+
+            if (equippedCount === 0) {
+                showToast("Add at least one item before saving.");
+                return;
+            }
+
+            const outfit = {
+                id: 'outfit_' + Date.now(),
+                title: title,
+                items: { ...appData.currentCanvas }
+            };
+
+            appData.outfits.push(outfit);
+            if (nameInput) nameInput.value = '';
+            renderSavedOutfits();
+            showToast("Outfit saved to lookbook!");
+        }
+
+        function renderSavedOutfits() {
+            const grid = document.getElementById('savedOutfitsGrid');
+            if (!grid) return;
+            if (appData.outfits.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-xs text-stone-500 font-bold italic text-center py-4">No saved outfits yet.</p>`;
+                return;
+            }
+
+            grid.innerHTML = appData.outfits.map(outfit => `
+                <div class="bg-white rounded-2xl p-4 border border-stone-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-xs font-black text-black">${outfit.title}</h4>
+                        <button onclick="deleteOutfit('${outfit.id}')" class="text-stone-400 hover:text-red-500 text-xs">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-1.5 mb-3">
+                        ${Object.values(outfit.items).filter(Boolean).map(item => `
+                            <img src="${item.img}" class="w-full h-14 object-cover rounded-lg border border-stone-200" title="${item.title}">
+                        `).join('')}
+                    </div>
+                    <button onclick="wearOutfit('${outfit.id}')" class="w-full py-1.5 bg-stone-100 hover:bg-stone-200 text-black rounded-xl text-[10px] font-extrabold uppercase tracking-wider transition">
+                        Equip to Canvas
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function wearOutfit(outfitId) {
+            const outfit = appData.outfits.find(o => o.id === outfitId);
+            if (!outfit) return;
+            appData.currentCanvas = { ...outfit.items };
+            ['top', 'bottom', 'outerwear', 'shoes', 'accessory'].forEach(cat => updateCanvasSlot(cat));
+            updateWeatherOutfitMatchBanner();
+            showToast(`Equipped "${outfit.title}"`);
+        }
+
+        function deleteOutfit(outfitId) {
+            appData.outfits = appData.outfits.filter(o => o.id !== outfitId);
+            renderSavedOutfits();
+            showToast("Outfit deleted.");
+        }
+    </script>
+</body>
+</html>

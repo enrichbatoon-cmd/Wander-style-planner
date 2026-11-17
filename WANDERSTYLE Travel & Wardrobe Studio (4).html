@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full overflow-x-hidden bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WANDERSTYLE - Roxas, Isabela</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        canvas: '#F8F7F4',
+                        stone: {
+                            50: '#FBFBFA',
+                            100: '#F2F0EC',
+                            200: '#E4E0D5',
+                            300: '#D0C9BB',
+                            400: '#B8AFA0'
+                        },
+                        olive: {
+                            500: '#7E8670',
+                            600: '#646C57',
+                            700: '#4D5442'
+                        },
+                        sand: {
+                            500: '#D4B896',
+                            600: '#BA9B74'
+                        },
+                        terracotta: {
+                            500: '#B86F52',
+                            600: '#9E5A3F'
+                        },
+                        charcoal: {
+                            800: '#33302B',
+                            900: '#1F1D1A'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            max-width: 100vw;
+            height: 100dvh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            overscroll-behavior-x: none;
+            background-color: #F8F7F4;
+            color: #1F1D1A;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="font-sans text-charcoal-900 flex flex-col antialiased selection:bg-charcoal-900 selection:text-white overflow-hidden">
+
+    <!-- Top Navigation Header -->
+    <header class="shrink-0 z-40 w-full bg-canvas/95 backdrop-blur-md border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14 sm:h-16 gap-2">
+                <div class="flex items-center space-x-2 min-w-0">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-charcoal-900 flex items-center justify-center text-canvas shadow-sm shrink-0">
+                        <i class="fa-solid fa-compass text-xs sm:text-sm"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h1 class="text-sm sm:text-lg font-black tracking-tight text-black truncate">WANDERSTYLE</h1>
+                        <p class="text-[10px] uppercase tracking-widest text-olive-700 font-extrabold hidden sm:block truncate">Roxas, Isabela</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                    <button onclick="switchTab('destination')" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200/80 transition text-[11px] sm:text-xs font-extrabold text-black border border-stone-300">
+                        <i class="fa-solid fa-location-dot text-terracotta-500"></i>
+                        <span class="truncate max-w-[95px] sm:max-w-none">Roxas, Isabela</span>
+                    </button>
+                    <button id="authHeaderBtn" onclick="openAuthModal()" class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-charcoal-900 text-white hover:bg-black transition text-[11px] sm:text-xs font-extrabold shadow-sm border border-stone-700">
+                        <i class="fa-solid fa-user-circle text-sand-500 text-xs sm:text-sm"></i>
+                        <span id="userBadgeText" class="truncate max-w-[75px] sm:max-w-[120px]">Sign In</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- FULL APP ACCESS CONTROL LOCK OVERLAY -->
+    <div id="appLockOverlay" class="fixed inset-0 z-50 bg-charcoal-900/95 backdrop-blur-md flex items-center justify-center p-4 text-center text-white overflow-y-auto">
+        <div class="max-w-md w-full bg-stone-900 border border-stone-700 p-6 sm:p-8 rounded-3xl shadow-2xl space-y-5 my-auto">
+            <div class="w-14 h-14 rounded-2xl bg-terracotta-500 text-white mx-auto flex items-center justify-center text-2xl shadow-lg">
+                <i class="fa-solid fa-compass"></i>
+            </div>
+            <div>
+                <h2 class="text-xl sm:text-2xl font-black text-white">WANDERSTYLE</h2>
+                <p class="text-xs text-stone-300 mt-1">Roxas, Isabela Travel & Wardrobe Companion</p>
+            </div>
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-3 text-left">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-stone-300 uppercase mb-1">Full Name</label>
+                    <input type="text" id="lockNameInput" required placeholder="Enter your name" class="w-full px-3.5 py-2.5 rounded-xl bg-stone-800 border border-stone-700 text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-terracotta-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-extrabold text-stone-300 uppercase mb-1">Email</label>
+                    <input type="email" id="lockEmailInput" required placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-stone-800 border border-stone-700 text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-terracotta-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-extrabold text-stone-300 uppercase mb-1">Password</label>
+                    <input type="password" id="lockPasswordInput" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-stone-800 border border-stone-700 text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-terracotta-500">
+                </div>
+                <button type="submit" class="w-full py-3 mt-2 bg-terracotta-500 hover:bg-terracotta-600 text-white font-extrabold rounded-xl text-xs uppercase tracking-wider transition shadow-md">
+                    Continue to WANDERSTYLE
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scrollable Main Content Container -->
+    <main class="flex-1 w-full overflow-y-auto overflow-x-hidden">
+        <div class="max-w-5xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 md:pb-24">
+
+            <!-- TAB 1: DESTINATION & WEATHER -->
+            <section id="tab-destination" class="tab-content space-y-4 sm:space-y-6 w-full">
+                <div class="relative rounded-3xl bg-charcoal-900 p-5 sm:p-8 text-canvas shadow-xl overflow-hidden border border-stone-800">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518509562880-c7f29bc8e84f?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center opacity-30"></div>
+                    <div class="relative z-10 max-w-xl">
+                        <span class="inline-block px-3 py-1 rounded-full bg-stone-900/90 text-[10px] font-bold uppercase tracking-widest text-sand-500 mb-2 border border-stone-700">Destination</span>
+                        <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-1 text-white">Roxas, Isabela</h2>
+                        <p class="text-stone-200 text-xs sm:text-sm font-medium">Cagayan Valley, Philippines</p>
+                    </div>
+                </div>
+
+                <!-- Current Weather & Featured Spots -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <div class="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-black text-charcoal-900">Current Weather</h3>
+                                <p class="text-xs text-charcoal-800 font-bold uppercase">Roxas, Isabela</p>
+                            </div>
+                            <span class="text-2xl sm:text-3xl text-terracotta-500"><i class="fa-solid fa-sun"></i></span>
+                        </div>
+                        
+                        <div class="my-3 sm:my-4 flex flex-wrap items-baseline gap-2.5">
+                            <span class="text-4xl sm:text-5xl font-extrabold text-black">31°C</span>
+                            <span class="text-xs font-extrabold text-charcoal-900 bg-sand-500/20 px-3 py-1 rounded-full border border-sand-500/30">Warm & Tropical</span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 pt-4 border-t border-stone-200 text-center">
+                            <div class="bg-stone-100 p-2 sm:p-2.5 rounded-2xl border border-stone-200">
+                                <p class="text-[9px] text-charcoal-800 uppercase font-bold">Humidity</p>
+                                <p class="text-xs font-black text-black">75%</p>
+                            </div>
+                            <div class="bg-stone-100 p-2 sm:p-2.5 rounded-2xl border border-stone-200">
+                                <p class="text-[9px] text-charcoal-800 uppercase font-bold">Rain</p>
+                                <p class="text-xs font-black text-black">20%</p>
+                            </div>
+                            <div class="bg-stone-100 p-2 sm:p-2.5 rounded-2xl border border-stone-200">
+                                <p class="text-[9px] text-charcoal-800 uppercase font-bold">Wind</p>
+                                <p class="text-xs font-black text-black">12 km/h</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-sm flex flex-col justify-between space-y-4">
+                        <h3 class="text-sm sm:text-base font-black text-black flex items-center gap-2">
+                            <i class="fa-solid fa-map-pin text-terracotta-500"></i>
+                            <span>Key Spots in Roxas, Isabela</span>
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <div class="bg-stone-100 p-3 rounded-2xl border border-stone-200">
+                                <h4 class="text-xs font-black text-black">Roxas Public Market</h4>
+                                <p class="text-[11px] font-semibold text-charcoal-800">Local produce & goods</p>
+                            </div>
+                            <div class="bg-stone-100 p-3 rounded-2xl border border-stone-200">
+                                <h4 class="text-xs font-black text-black">Roxas Town Center</h4>
+                                <p class="text-[11px] font-semibold text-charcoal-800">Dining & plaza hub</p>
+                            </div>
+                            <div class="bg-stone-100 p-3 rounded-2xl border border-stone-200">
+                                <h4 class="text-xs font-black text-black">Astrodome & Park</h4>
+                                <p class="text-[11px] font-semibold text-charcoal-800">Community events</p>
+                            </div>
+                            <div class="bg-stone-100 p-3 rounded-2xl border border-stone-200">
+                                <h4 class="text-xs font-black text-black">Bantug Lake Ranch</h4>
+                                <p class="text-[11px] font-semibold text-charcoal-800">Scenic relaxation</p>
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-stone-100 border border-stone-200 flex items-center gap-2.5">
+                            <i class="fa-solid fa-shirt text-terracotta-500 text-sm shrink-0"></i>
+                            <p class="text-xs text-black font-semibold">Pack breathable cotton tees and comfortable walking shoes.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: ITINERARY PLANNER -->
+            <section id="tab-itinerary" class="tab-content hidden space-y-4 sm:space-y-6 w-full">
+                <div class="bg-white rounded-3xl p-4 sm:p-6 border border-stone-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-lg sm:text-2xl font-black text-black">Itinerary</h2>
+                        <span class="text-[11px] sm:text-xs bg-terracotta-500 text-white font-extrabold px-2.5 py-1 rounded-full">Roxas, Isabela</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="addItineraryDay()" class="px-3 py-2 bg-stone-100 hover:bg-stone-200 text-black font-extrabold rounded-xl border border-stone-300 text-xs transition">
+                            + Day
+                        </button>
+                        <button onclick="openItineraryModal()" class="px-3.5 py-2 bg-charcoal-900 hover:bg-black text-white font-extrabold rounded-xl shadow-sm text-xs">
+                            + Add Activity
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between gap-2 bg-stone-100 p-2 rounded-2xl border border-stone-200">
+                    <div id="itineraryDaysNav" class="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
+                    <button onclick="removeItineraryDay()" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 font-extrabold rounded-xl text-[11px] border border-red-200 shrink-0 transition">
+                        Remove Day
+                    </button>
+                </div>
+
+                <div id="itineraryList" class="space-y-3"></div>
+            </section>
+
+            <!-- TAB 3: ROAD & SITE NAVIGATION -->
+            <section id="tab-navigation" class="tab-content hidden space-y-4 sm:space-y-6 w-full">
+                <div class="bg-white rounded-3xl p-4 sm:p-6 border border-stone-200 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between gap-2">
+                        <h2 class="text-lg sm:text-2xl font-black text-black">Route Finder</h2>
+                        <span class="text-[11px] sm:text-xs bg-terracotta-500/15 text-terracotta-600 font-extrabold px-3 py-1 rounded-full shrink-0">Roxas, Isabela</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] uppercase font-black text-black mb-1">From</label>
+                            <input type="text" id="routeStartInput" value="Roxas Public Market" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs font-extrabold text-black bg-stone-50">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase font-black text-black mb-1">To</label>
+                            <input type="text" id="routeEndInput" value="Roxas Town Center" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs font-extrabold text-black bg-stone-50">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <button onclick="calculateCurrentRoute()" class="w-full py-2.5 bg-terracotta-500 hover:bg-terracotta-600 text-white rounded-xl font-bold text-xs transition">
+                            Calculate Route
+                        </button>
+                        <button onclick="openExternalMaps()" class="w-full py-2.5 bg-charcoal-900 text-white rounded-xl font-bold text-xs hover:bg-black transition">
+                            Open Google Maps
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-stone-200">
+                        <div class="min-w-0">
+                            <h3 id="routeTitleDisplay" class="text-base sm:text-lg font-black text-black break-words">Roxas Public Market → Roxas Town Center</h3>
+                            <p id="routeDistanceDisplay" class="text-xs font-bold text-stone-500 mt-0.5">Distance: ~2.5 km • Est. 8 mins</p>
+                        </div>
+                        <span class="text-xs font-black bg-stone-100 px-3 py-1.5 rounded-xl border border-stone-200 self-start shrink-0">No Toll Fees</span>
+                    </div>
+                    <div class="space-y-2" id="turnByTurnList"></div>
+                </div>
+            </section>
+
+            <!-- TAB 4: STREAMLINED RIDE & CAR RENTAL -->
+            <section id="tab-transit" class="tab-content hidden space-y-4 sm:space-y-6 w-full">
+                <div>
+                    <h2 class="text-lg sm:text-2xl font-black text-black">Ride & Car Rental</h2>
+                    <p class="text-xs font-bold text-charcoal-800">Roxas, Isabela • Cash on Arrival</p>
+                </div>
+
+                <div class="bg-stone-200/70 p-1.5 rounded-2xl grid grid-cols-2 gap-1.5 w-full max-w-md">
+                    <button id="tabBtnRide" onclick="switchTransitView('ride')" class="py-2.5 rounded-xl text-xs font-black bg-charcoal-900 text-white shadow-sm transition">
+                        <i class="fa-solid fa-taxi mr-1.5 text-sand-500"></i> Quick Ride
+                    </button>
+                    <button id="tabBtnRental" onclick="switchTransitView('rental')" class="py-2.5 rounded-xl text-xs font-black text-charcoal-800 hover:text-black transition">
+                        <i class="fa-solid fa-car mr-1.5 text-olive-600"></i> Car Rental
+                    </button>
+                </div>
+
+                <!-- VIEW A: SIMPLE RIDE BOOKING -->
+                <div id="transitRideView" class="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-sm w-full max-w-xl space-y-4">
+                    <div class="flex items-center gap-3 p-3 bg-stone-100 rounded-2xl border border-stone-200">
+                        <div class="w-10 h-10 rounded-full bg-charcoal-900 text-sand-500 flex items-center justify-center font-black text-sm shrink-0">
+                            MS
+                        </div>
+                        <div class="min-w-0">
+                            <h4 class="text-xs font-black text-black truncate">Mark Santos • Local Driver</h4>
+                            <p class="text-[11px] font-bold text-stone-600 truncate">Toyota Vios • Roxas, Isabela (4.9 ★)</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-[10px] font-black text-black uppercase mb-1">Pick-up Location</label>
+                            <select id="grabPickupSelect" class="w-full p-3 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black">
+                                <option value="Roxas Public Market">Roxas Public Market</option>
+                                <option value="Roxas Town Center">Roxas Town Center</option>
+                                <option value="Roxas Bus Terminal">Roxas Bus Terminal</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-black uppercase mb-1">Drop-off Location</label>
+                            <input type="text" id="grabDropoffInput" value="Roxas Town Center" class="w-full p-3 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-2 p-3.5 bg-stone-100 rounded-2xl border border-stone-200">
+                        <div>
+                            <p class="text-[10px] font-black uppercase text-stone-500">Estimated Fare</p>
+                            <p class="text-lg font-black text-black">₱150 PHP</p>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-xl bg-white border border-stone-300 text-xs font-black text-black">
+                            <i class="fa-solid fa-money-bill-wave text-olive-600 mr-1"></i> Cash on Arrival
+                        </span>
+                    </div>
+
+                    <button onclick="bookGrabRide()" class="w-full py-3.5 bg-terracotta-500 hover:bg-terracotta-600 text-white rounded-2xl font-extrabold text-xs uppercase tracking-wider shadow-md transition">
+                        Confirm Ride
+                    </button>
+                </div>
+
+                <!-- VIEW B: SIMPLE CAR RENTAL -->
+                <div id="transitRentalView" class="hidden bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-sm w-full max-w-xl space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-black text-black uppercase mb-1">Vehicle</label>
+                            <select id="rentalVehicleSelect" onchange="updateRentalPrice()" class="w-full p-3 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black">
+                                <option value="2500">Sedan (₱2,500/day)</option>
+                                <option value="3800">SUV (₱3,800/day)</option>
+                                <option value="4500">Family Van (₱4,500/day)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-black uppercase mb-1">Number of Days</label>
+                            <input type="number" id="rentalDays" value="1" min="1" max="30" onchange="updateRentalPrice()" class="w-full p-3 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-black uppercase mb-1">Pick-up Hub</label>
+                        <select id="rentalPickupLocation" class="w-full p-3 bg-stone-50 rounded-xl border border-stone-300 text-xs font-extrabold text-black">
+                            <option value="Roxas Town Center">Roxas Town Center</option>
+                            <option value="Roxas Public Market">Roxas Public Market</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-2 p-3.5 bg-stone-100 rounded-2xl border border-stone-200">
+                        <div>
+                            <p class="text-[10px] font-black uppercase text-stone-500">Total Rental</p>
+                            <p id="rentalTotalDisplay" class="text-lg font-black text-black">₱2,500 PHP</p>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-xl bg-white border border-stone-300 text-xs font-black text-black">
+                            <i class="fa-solid fa-money-bill-wave text-olive-600 mr-1"></i> Cash on Arrival
+                        </span>
+                    </div>
+
+                    <button onclick="reserveCarRental()" class="w-full py-3.5 bg-charcoal-900 hover:bg-black text-white rounded-2xl font-extrabold text-xs uppercase tracking-wider shadow-md transition">
+                        Reserve Vehicle
+                    </button>
+                </div>
+            </section>
+
+            <!-- TAB 5: DIGITAL WARDROBE -->
+            <section id="tab-wardrobe" class="tab-content hidden space-y-4 sm:space-y-6 w-full">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <h2 class="text-lg sm:text-2xl font-black text-black">Capsule Wardrobe</h2>
+                    <div class="flex gap-2">
+                        <button onclick="loadUnisexPresets()" class="px-3 py-2 bg-stone-100 hover:bg-stone-200 text-black font-extrabold rounded-xl text-xs border border-stone-300">
+                            Reset
+                        </button>
+                        <label class="cursor-pointer px-3.5 py-2 bg-charcoal-900 hover:bg-black text-white font-extrabold rounded-xl shadow-sm flex items-center gap-1.5 text-xs">
+                            <i class="fa-solid fa-camera text-sand-500"></i>
+                            <span>Add Item</span>
+                            <input type="file" id="wardrobeFileInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                        </label>
+                    </div>
+                </div>
+
+                <div id="wardrobeGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4"></div>
+            </section>
+
+            <!-- TAB 6: OUTFIT STUDIO -->
+            <section id="tab-outfit" class="tab-content hidden space-y-4 sm:space-y-6 w-full">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-lg sm:text-2xl font-black text-black">Outfit Studio</h2>
+                        <p class="text-xs font-bold text-charcoal-800">Roxas, Isabela Weather (31°C)</p>
+                    </div>
+
+                    <button onclick="autoGenerateOutfit()" class="px-4 py-2.5 bg-terracotta-500 hover:bg-terracotta-600 text-white font-extrabold rounded-2xl shadow-sm flex items-center gap-2 text-xs">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Generate Outfit</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+                    <div class="lg:col-span-7 bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-sm space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-black text-black text-xs uppercase">Outfit Canvas</h3>
+                            <button onclick="clearCanvas()" class="text-xs font-black text-terracotta-500 hover:underline">Clear</button>
+                        </div>
+
+                        <div class="bg-stone-50 rounded-2xl p-3 sm:p-4 border border-dashed border-stone-300 space-y-2.5">
+                            <div id="slot-top" class="min-h-[70px] bg-white rounded-xl border border-stone-200 flex items-center justify-center p-2">
+                                <span class="text-[10px] text-charcoal-800 uppercase font-black">Top</span>
+                            </div>
+                            <div id="slot-bottom" class="min-h-[70px] bg-white rounded-xl border border-stone-200 flex items-center justify-center p-2">
+                                <span class="text-[10px] text-charcoal-800 uppercase font-black">Bottom</span>
+                            </div>
+                            <div id="slot-shoes" class="min-h-[65px] bg-white rounded-xl border border-stone-200 flex items-center justify-center p-2">
+                                <span class="text-[10px] text-charcoal-800 uppercase font-black">Shoes</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <input type="text" id="outfitNameInput" placeholder="Look Title" class="flex-1 min-w-0 px-3 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-black bg-stone-50">
+                            <button onclick="saveCurrentOutfit()" class="px-4 py-2.5 bg-charcoal-900 text-white rounded-xl font-extrabold text-xs shrink-0">Save</button>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-sm space-y-3">
+                        <h3 class="font-black text-black text-xs uppercase">Tap Item to Equip</h3>
+                        <div id="pickerItemsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-stone-200">
+                    <h3 class="text-base font-black text-black mb-3">Saved Outfits</h3>
+                    <div id="savedOutfitsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Fixed Bottom Navigation Bar for Mobile -->
+    <nav class="shrink-0 z-40 w-full bg-canvas/95 backdrop-blur-md border-t border-stone-200 md:hidden">
+        <div class="grid grid-cols-6 h-16 w-full">
+            <button onclick="switchTab('destination')" class="nav-tab-btn flex flex-col items-center justify-center text-black font-extrabold min-w-0" data-tab="destination">
+                <i class="fa-solid fa-compass text-sm"></i>
+                <span class="text-[9px] mt-0.5 truncate">Explore</span>
+            </button>
+            <button onclick="switchTab('itinerary')" class="nav-tab-btn flex flex-col items-center justify-center text-charcoal-800 font-extrabold min-w-0" data-tab="itinerary">
+                <i class="fa-solid fa-calendar-day text-sm"></i>
+                <span class="text-[9px] mt-0.5 truncate">Plan</span>
+            </button>
+            <button onclick="switchTab('navigation')" class="nav-tab-btn flex flex-col items-center justify-center text-charcoal-800 font-extrabold min-w-0" data-tab="navigation">
+                <i class="fa-solid fa-route text-sm"></i>
+                <span class="text-[9px] mt-0.5 truncate">Road</span>
+            </button>
+            <button onclick="switchTab('transit')" class="nav-tab-btn flex flex-col items-center justify-center text-charcoal-800 font-extrabold min-w-0" data-tab="transit">
+                <i class="fa-solid fa-taxi text-sm"></i>
+                <span class="text-[9px] mt-0.5 truncate">Ride</span>
+            </button>
+            <button onclick="switchTab('wardrobe')" class="nav-tab-btn flex flex-col items-center justify-center text-charcoal-800 font-extrabold min-w-0" data-tab="wardrobe">
+                <i class="fa-solid fa-shirt text-sm"></i>
+                <span class="text-[9px] mt-0.5 truncate">Closet</span>
+            </button>
+            <button onclick="switchTab('outfit')" class="nav-tab-btn flex flex-col items-center justify-center text-charcoal-800 font-extrabold min-w-0" data-tab="outfit">
+                <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                <span class="text-[9px] mt-0.5 truncate">Outfits</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Desktop / Windows Floating Navigation Bar -->
+    <div class="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-charcoal-900/95 backdrop-blur-md text-white px-3 py-2 rounded-full shadow-2xl border border-stone-700/60 space-x-1 max-w-[95vw]">
+        <button onclick="switchTab('destination')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold bg-terracotta-500 text-white transition whitespace-nowrap" data-tab="destination">
+            <i class="fa-solid fa-compass mr-1.5"></i> Explore
+        </button>
+        <button onclick="switchTab('itinerary')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition whitespace-nowrap" data-tab="itinerary">
+            <i class="fa-solid fa-calendar-day mr-1.5"></i> Plan
+        </button>
+        <button onclick="switchTab('navigation')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition whitespace-nowrap" data-tab="navigation">
+            <i class="fa-solid fa-route mr-1.5"></i> Road
+        </button>
+        <button onclick="switchTab('transit')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition whitespace-nowrap" data-tab="transit">
+            <i class="fa-solid fa-taxi mr-1.5"></i> Ride & Rental
+        </button>
+        <button onclick="switchTab('wardrobe')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition whitespace-nowrap" data-tab="wardrobe">
+            <i class="fa-solid fa-shirt mr-1.5"></i> Closet
+        </button>
+        <button onclick="switchTab('outfit')" class="desktop-nav-btn px-4 py-2 rounded-full text-xs font-semibold text-stone-300 hover:text-white transition whitespace-nowrap" data-tab="outfit">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Outfits
+        </button>
+    </div>
+
+    <!-- ACCOUNT MODAL -->
+    <div id="authModal" class="fixed inset-0 z-50 bg-charcoal-900/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 space-y-4">
+            <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+                <h3 class="text-base font-black text-black">WANDERSTYLE Account</h3>
+                <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full bg-stone-100 text-black flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleModalAuthSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-black uppercase mb-1">Full Name</label>
+                    <input type="text" id="authNameInput" required placeholder="Your Name" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-black bg-stone-50">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-extrabold text-black uppercase mb-1">Email</label>
+                    <input type="email" id="authEmailInput" required placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-black bg-stone-50">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-extrabold text-black uppercase mb-1">Password</label>
+                    <input type="password" id="authPasswordInput" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-black bg-stone-50">
+                </div>
+                <button type="submit" class="w-full py-3 bg-terracotta-500 hover:bg-terracotta-600 text-white font-extrabold rounded-xl text-xs uppercase tracking-wider">
+                    Sign In / Create Account
+                </button>
+            </form>
+
+            <div id="signOutContainer" class="pt-2 border-t border-stone-200 hidden">
+                <button onclick="handleSignOut()" class="w-full py-2 bg-red-50 text-red-600 font-extrabold rounded-xl text-xs border border-red-200">
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVITY MODAL -->
+    <div id="itineraryModal" class="fixed inset-0 z-50 bg-charcoal-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 space-y-4">
+            <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+                <h3 class="text-base font-black text-black">Add Activity</h3>
+                <button onclick="closeItineraryModal()" class="w-8 h-8 rounded-full bg-stone-100 text-black flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveActivitySubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-extrabold text-black uppercase mb-1">Activity Title</label>
+                    <input type="text" id="actTitleInput" required placeholder="e.g. Visit Roxas Public Market" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-black bg-stone-50">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-black uppercase mb-1">Time</label>
+                        <input type="time" id="actTimeInput" required value="09:00" class="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-black bg-stone-50">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-black uppercase mb-1">Location</label>
+                        <input type="text" id="actLocationInput" value="Roxas, Isabela" class="w-full px-3 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-black bg-stone-50">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3 bg-terracotta-500 text-white font-extrabold rounded-xl text-xs uppercase">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-20 right-4 left-4 sm:left-auto z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 bg-charcoal-900 text-canvas px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 border border-stone-700 text-xs font-bold max-w-sm ml-auto">
+        <i class="fa-solid fa-circle-check text-olive-500 shrink-0"></i>
+        <span id="toastMsg" class="truncate">Done</span>
+    </div>
+
+    <script>
+        class UserAccount {
+            constructor(name, email, password) {
+                this.name = name;
+                this.email = email;
+                this.password = password;
+            }
+        }
+
+        class BookingService {
+            constructor(destination) {
+                this.destination = destination;
+                this.paymentMethod = "Cash on Arrival";
+            }
+            confirmBooking() {
+                return `Booking confirmed in ${this.destination} (${this.paymentMethod}).`;
+            }
+        }
+
+        class RideService extends BookingService {
+            constructor(destination, pickup, dropoff, fare) {
+                super(destination);
+                this.pickup = pickup;
+                this.dropoff = dropoff;
+                this.fare = fare;
+            }
+            confirmBooking() {
+                return `Ride booked: ${this.pickup} to ${this.dropoff} (₱${this.fare} • ${this.paymentMethod}).`;
+            }
+        }
+
+        class RentalService extends BookingService {
+            constructor(destination, vehicleName, days, total) {
+                super(destination);
+                this.vehicleName = vehicleName;
+                this.days = days;
+                this.total = total;
+            }
+            confirmBooking() {
+                return `Reserved ${this.vehicleName} for ${this.days} day(s) (₱${this.total.toLocaleString()} • ${this.paymentMethod}).`;
+            }
+        }
+
+        class WardrobeItem {
+            constructor(id, title, category, img) {
+                this.id = id;
+                this.title = title;
+                this.category = category;
+                this.img = img;
+            }
+        }
+
+        const DEFAULT_WARDROBE = [
+            new WardrobeItem("w1", "Cotton Tee", "top", "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80"),
+            new WardrobeItem("w2", "Linen Shirt", "top", "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&q=80"),
+            new WardrobeItem("w3", "Casual Trousers", "bottom", "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=400&q=80"),
+            new WardrobeItem("w4", "Walking Sneakers", "shoes", "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=400&q=80")
+        ];
+
+        let appState = {
+            currentUser: null,
+            registeredAccounts: [],
+            destination: "Roxas, Isabela",
+            totalDays: 2,
+            selectedDay: 1,
+            itinerary: [
+                { id: "i1", day: 1, time: "09:00", title: "Roxas Public Market", location: "Roxas, Isabela" },
+                { id: "i2", day: 1, time: "13:00", title: "Roxas Town Center", location: "Roxas, Isabela" }
+            ],
+            wardrobe: [...DEFAULT_WARDROBE],
+            canvas: { top: null, bottom: null, shoes: null },
+            savedOutfits: []
+        };
+
+        function initAuth() {
+            try {
+                const savedAccounts = JSON.parse(localStorage.getItem('wanderstyle_accounts') || '[]');
+                const activeSession = JSON.parse(localStorage.getItem('wanderstyle_session') || 'null');
+                appState.registeredAccounts = savedAccounts;
+                if (activeSession) {
+                    appState.currentUser = activeSession;
+                }
+            } catch (e) {}
+            updateAuthUI();
+        }
+
+        function processAuthentication(name, email, password) {
+            const existing = appState.registeredAccounts.find(acc => acc.email.toLowerCase() === email.toLowerCase());
+            if (existing) {
+                appState.currentUser = existing;
+                showToast(`Welcome back, ${existing.name}!`);
+            } else {
+                const newAccount = new UserAccount(name, email, password);
+                appState.registeredAccounts.push(newAccount);
+                appState.currentUser = newAccount;
+                try {
+                    localStorage.setItem('wanderstyle_accounts', JSON.stringify(appState.registeredAccounts));
+                } catch (e) {}
+                showToast(`Signed in as ${name}!`);
+            }
+
+            try {
+                localStorage.setItem('wanderstyle_session', JSON.stringify(appState.currentUser));
+            } catch (e) {}
+            updateAuthUI();
+        }
+
+        function handleAuthSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('lockNameInput').value.trim();
+            const email = document.getElementById('lockEmailInput').value.trim();
+            const password = document.getElementById('lockPasswordInput').value;
+            processAuthentication(name, email, password);
+        }
+
+        function handleModalAuthSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('authNameInput').value.trim();
+            const email = document.getElementById('authEmailInput').value.trim();
+            const password = document.getElementById('authPasswordInput').value;
+            processAuthentication(name, email, password);
+            closeAuthModal();
+        }
+
+        function updateAuthUI() {
+            const lockOverlay = document.getElementById('appLockOverlay');
+            const badgeText = document.getElementById('userBadgeText');
+            const signOutContainer = document.getElementById('signOutContainer');
+
+            if (appState.currentUser) {
+                lockOverlay.classList.add('hidden');
+                badgeText.innerText = appState.currentUser.name;
+                signOutContainer.classList.remove('hidden');
+            } else {
+                lockOverlay.classList.remove('hidden');
+                badgeText.innerText = "Sign In";
+                signOutContainer.classList.add('hidden');
+            }
+        }
+
+        function handleSignOut() {
+            appState.currentUser = null;
+            try {
+                localStorage.removeItem('wanderstyle_session');
+            } catch (e) {}
+            updateAuthUI();
+            closeAuthModal();
+            showToast("Signed out.");
+        }
+
+        function openAuthModal() {
+            if (appState.currentUser) {
+                document.getElementById('authNameInput').value = appState.currentUser.name;
+                document.getElementById('authEmailInput').value = appState.currentUser.email;
+                document.getElementById('authPasswordInput').value = appState.currentUser.password;
+            }
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function switchTransitView(view) {
+            const rideView = document.getElementById('transitRideView');
+            const rentalView = document.getElementById('transitRentalView');
+            const btnRide = document.getElementById('tabBtnRide');
+            const btnRental = document.getElementById('tabBtnRental');
+
+            if (view === 'ride') {
+                rideView.classList.remove('hidden');
+                rentalView.classList.add('hidden');
+                btnRide.className = "py-2.5 rounded-xl text-xs font-black bg-charcoal-900 text-white shadow-sm transition";
+                btnRental.className = "py-2.5 rounded-xl text-xs font-black text-charcoal-800 hover:text-black transition";
+            } else {
+                rentalView.classList.remove('hidden');
+                rideView.classList.add('hidden');
+                btnRental.className = "py-2.5 rounded-xl text-xs font-black bg-charcoal-900 text-white shadow-sm transition";
+                btnRide.className = "py-2.5 rounded-xl text-xs font-black text-charcoal-800 hover:text-black transition";
+            }
+        }
+
+        function bookGrabRide() {
+            const pickup = document.getElementById('grabPickupSelect').value;
+            const dropoff = document.getElementById('grabDropoffInput').value.trim() || "Roxas Town Center";
+            const ride = new RideService(appState.destination, pickup, dropoff, 150);
+            showToast(ride.confirmBooking());
+        }
+
+        function updateRentalPrice() {
+            const rate = parseInt(document.getElementById('rentalVehicleSelect').value) || 2500;
+            const days = parseInt(document.getElementById('rentalDays').value) || 1;
+            const total = rate * days;
+            document.getElementById('rentalTotalDisplay').innerText = `₱${total.toLocaleString()} PHP`;
+        }
+
+        function reserveCarRental() {
+            const selectEl = document.getElementById('rentalVehicleSelect');
+            const vehicleName = selectEl.options[selectEl.selectedIndex].text.split(' ')[0];
+            const rate = parseInt(selectEl.value) || 2500;
+            const days = parseInt(document.getElementById('rentalDays').value) || 1;
+            const rental = new RentalService(appState.destination, vehicleName, days, rate * days);
+            showToast(rental.confirmBooking());
+        }
+
+        function renderItinerary() {
+            const nav = document.getElementById('itineraryDaysNav');
+            let html = '';
+            for (let d = 1; d <= appState.totalDays; d++) {
+                html += `<button onclick="selectItineraryDay(${d})" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold shrink-0 ${d === appState.selectedDay ? 'bg-black text-white' : 'bg-white text-black border border-stone-300'}">Day ${d}</button>`;
+            }
+            nav.innerHTML = html;
+
+            const list = document.getElementById('itineraryList');
+            const items = appState.itinerary.filter(i => i.day === appState.selectedDay);
+            if (!items.length) {
+                list.innerHTML = `<p class="text-xs text-stone-500 text-center py-6 bg-white rounded-2xl border border-stone-200">No activities planned for Day ${appState.selectedDay}.</p>`;
+                return;
+            }
+            list.innerHTML = items.map(item => `
+                <div class="bg-white rounded-2xl p-3.5 sm:p-4 border border-stone-200 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="text-xs font-black bg-stone-100 px-2.5 py-1.5 rounded-xl shrink-0">${item.time}</span>
+                        <div class="min-w-0">
+                            <h4 class="text-xs font-black text-black truncate">${item.title}</h4>
+                            <p class="text-[11px] font-semibold text-stone-500 truncate">${item.location}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteItineraryItem('${item.id}')" class="text-red-500 hover:text-red-700 text-xs p-2 shrink-0">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function selectItineraryDay(d) {
+            appState.selectedDay = d;
+            renderItinerary();
+        }
+
+        function addItineraryDay() {
+            appState.totalDays++;
+            renderItinerary();
+        }
+
+        function removeItineraryDay() {
+            if (appState.totalDays <= 1) return;
+            appState.itinerary = appState.itinerary.filter(i => i.day !== appState.selectedDay);
+            appState.totalDays--;
+            if (appState.selectedDay > appState.totalDays) appState.selectedDay = appState.totalDays;
+            renderItinerary();
+        }
+
+        function openItineraryModal() {
+            document.getElementById('itineraryModal').classList.remove('hidden');
+        }
+
+        function closeItineraryModal() {
+            document.getElementById('itineraryModal').classList.add('hidden');
+        }
+
+        function saveActivitySubmit(e) {
+            e.preventDefault();
+            const title = document.getElementById('actTitleInput').value.trim();
+            const time = document.getElementById('actTimeInput').value;
+            const location = document.getElementById('actLocationInput').value.trim() || "Roxas, Isabela";
+            appState.itinerary.push({ id: 'i_' + Date.now(), day: appState.selectedDay, time, title, location });
+            closeItineraryModal();
+            renderItinerary();
+            showToast("Activity added.");
+        }
+
+        function deleteItineraryItem(id) {
+            appState.itinerary = appState.itinerary.filter(i => i.id !== id);
+            renderItinerary();
+        }
+
+        function calculateCurrentRoute() {
+            const start = document.getElementById('routeStartInput').value.trim() || "Roxas Public Market";
+            const end = document.getElementById('routeEndInput').value.trim() || "Roxas Town Center";
+            document.getElementById('routeTitleDisplay').innerText = `${start} → ${end}`;
+            document.getElementById('routeDistanceDisplay').innerText = `Distance: ~2.5 km • Est. 8 mins`;
+            document.getElementById('turnByTurnList').innerHTML = `
+                <div class="p-3 rounded-xl bg-stone-100 text-xs font-bold text-black">1. Depart from ${start} along main highway.</div>
+                <div class="p-3 rounded-xl bg-stone-100 text-xs font-bold text-black">2. Arrive at ${end}, Roxas, Isabela.</div>
+            `;
+        }
+
+        function openExternalMaps() {
+            const start = encodeURIComponent(document.getElementById('routeStartInput').value + " Roxas Isabela");
+            const end = encodeURIComponent(document.getElementById('routeEndInput').value + " Roxas Isabela");
+            window.open(`https://www.google.com/maps/dir/?api=1&origin=${start}&destination=${end}`, '_blank');
+        }
+
+        function renderWardrobe() {
+            const grid = document.getElementById('wardrobeGrid');
+            grid.innerHTML = appState.wardrobe.map(item => `
+                <div class="bg-white rounded-2xl p-2.5 border border-stone-200 flex flex-col min-w-0">
+                    <img src="${item.img}" class="w-full h-28 sm:h-32 object-cover rounded-xl mb-2">
+                    <h4 class="text-xs font-black text-black truncate">${item.title}</h4>
+                    <span class="text-[10px] font-bold text-stone-500 uppercase">${item.category}</span>
+                </div>
+            `).join('');
+
+            const picker = document.getElementById('pickerItemsGrid');
+            picker.innerHTML = appState.wardrobe.map(item => `
+                <div onclick="equipItem('${item.id}')" class="bg-stone-50 hover:bg-stone-100 p-2 rounded-xl border border-stone-200 cursor-pointer text-center min-w-0">
+                    <img src="${item.img}" class="w-full h-14 object-cover rounded-lg mb-1">
+                    <span class="text-[10px] font-black text-black block truncate">${item.title}</span>
+                </div>
+            `).join('');
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                appState.wardrobe.push(new WardrobeItem('w_' + Date.now(), "New Garment", "top", ev.target.result));
+                renderWardrobe();
+                showToast("Added to closet.");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function loadUnisexPresets() {
+            appState.wardrobe = [...DEFAULT_WARDROBE];
+            renderWardrobe();
+            showToast("Wardrobe reset.");
+        }
+
+        function equipItem(id) {
+            const item = appState.wardrobe.find(i => i.id === id);
+            if (!item) return;
+            appState.canvas[item.category] = item;
+            updateCanvasUI();
+        }
+
+        function updateCanvasUI() {
+            ['top', 'bottom', 'shoes'].forEach(cat => {
+                const slot = document.getElementById(`slot-${cat}`);
+                const item = appState.canvas[cat];
+                if (item) {
+                    slot.innerHTML = `<div class="flex items-center gap-3 w-full px-2 min-w-0"><img src="${item.img}" class="w-11 h-11 rounded-lg object-cover shrink-0"><span class="text-xs font-black text-black truncate">${item.title}</span></div>`;
+                } else {
+                    slot.innerHTML = `<span class="text-[10px] text-charcoal-800 uppercase font-black">${cat}</span>`;
+                }
+            });
+        }
+
+        function clearCanvas() {
+            appState.canvas = { top: null, bottom: null, shoes: null };
+            updateCanvasUI();
+        }
+
+        function autoGenerateOutfit() {
+            const tops = appState.wardrobe.filter(i => i.category === 'top');
+            const bottoms = appState.wardrobe.filter(i => i.category === 'bottom');
+            const shoes = appState.wardrobe.filter(i => i.category === 'shoes');
+            appState.canvas.top = tops[Math.floor(Math.random() * tops.length)] || null;
+            appState.canvas.bottom = bottoms[Math.floor(Math.random() * bottoms.length)] || null;
+            appState.canvas.shoes = shoes[Math.floor(Math.random() * shoes.length)] || null;
+            updateCanvasUI();
+            showToast("Generated warm-weather look for Roxas!");
+        }
+
+        function saveCurrentOutfit() {
+            const equipped = Object.values(appState.canvas).filter(Boolean);
+            if (!equipped.length) return showToast("Equip an item first.");
+            const title = document.getElementById('outfitNameInput').value.trim() || `Roxas Look #${appState.savedOutfits.length + 1}`;
+            appState.savedOutfits.push({ title, items: equipped });
+            document.getElementById('outfitNameInput').value = '';
+            renderSavedOutfits();
+            showToast("Outfit saved.");
+        }
+
+        function renderSavedOutfits() {
+            const grid = document.getElementById('savedOutfitsGrid');
+            if (!appState.savedOutfits.length) {
+                grid.innerHTML = `<p class="text-xs text-stone-500 col-span-full">No saved outfits yet.</p>`;
+                return;
+            }
+            grid.innerHTML = appState.savedOutfits.map(o => `
+                <div class="bg-white rounded-2xl p-4 border border-stone-200 space-y-2 min-w-0">
+                    <h4 class="text-xs font-black text-black truncate">${o.title}</h4>
+                    <div class="grid grid-cols-3 gap-1.5">
+                        ${o.items.map(i => `<img src="${i.img}" class="w-full h-14 object-cover rounded-lg">`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                btn.classList.toggle('text-black', btn.dataset.tab === tabId);
+                btn.classList.toggle('text-charcoal-800', btn.dataset.tab !== tabId);
+            });
+
+            document.querySelectorAll('.desktop-nav-btn').forEach(btn => {
+                if (btn.dataset.tab === tabId) {
+                    btn.classList.add('bg-terracotta-500', 'text-white');
+                    btn.classList.remove('text-stone-300');
+                } else {
+                    btn.classList.remove('bg-terracotta-500', 'text-white');
+                    btn.classList.add('text-stone-300');
+                }
+            });
+
+            document.querySelector('main').scrollTop = 0;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-100px]', 'opacity-0');
+            }, 3000);
+        }
+
+        window.onload = function() {
+            initAuth();
+            renderItinerary();
+            calculateCurrentRoute();
+            renderWardrobe();
+            renderSavedOutfits();
+        };
+    </script>
+</body>
+</html>
